@@ -1,16 +1,22 @@
 # coding=utf-8
-import time
-
-import graphics as gr
-from graphics import color_rgb
-
+# Import a library of functions called 'pygame'
+import pygame
 import math
 
 coef = math.pi / 180
 
+# Initialize the game engine
+pygame.init()
+
+# Define some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
 
 class Scene(object):
-    _img = None  # type: gr.GraphWin
+    _img = None  # type: pygame.Surface
     width = 0
     height = 0
 
@@ -21,7 +27,7 @@ class Scene(object):
     _colors = []
     _size = 5
 
-    _bg = 'black'
+    _bg = BLACK
 
     def _setDigitalSize(self, size):
         # type: (int) -> Scene
@@ -146,14 +152,23 @@ class Scene(object):
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28,
              29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40])
 
-    def __init__(self, width, height, bg='black'):
+    def __init__(self, width, height, bg=BLACK):
         self.width = width
         self.height = height
 
+        # Set the height and width of the screen
+        size = (self.width, self.height)
+        self._img = pygame.display.set_mode(size)
+
+        pygame.display.set_caption("Jenkslex and Ganzz project")
+
         self._bg = bg
 
-        self._img = gr.GraphWin("Jenkslex and Ganzz project", self.width, self.height)
-        self._img.setBackground(self._bg)
+        self._img.fill(self._bg)
+
+        # Loop until the user clicks the close button.
+        self.done = False
+        self.clock = pygame.time.Clock()
 
     # def imagettftext2
     # def _imagettftext
@@ -163,23 +178,19 @@ class Scene(object):
         return self._img.getPixel(x, y)
 
     def getcolor(self, r, g, b):
-        # type: (int, int, int) -> str
-        return color_rgb(r, g, b)
+        # type: (int, int, int) -> [int, int, int]
+        return r, g, b
 
     def line(self, x1, y1, x2, y2, color):
-        # type: (int, int, int, int, str) -> Scene
-        line = gr.Line(gr.Point(x1, y1), gr.Point(x2, y2))
-        line.setOutline(color)
-        line.draw(self._img)
+        # type: (int, int, int, int, [int, int, int]) -> Scene
+        pygame.draw.line(self._img, color, [x1, y1], [x2, y2], 1)
         return self
 
         # обратная система координат
 
     def line2(self, x1, y1, x2, y2, color):
-        # type: (int, int, int, int, str) -> Scene
-        line = gr.Line(gr.Point(x1, self.height - y1), gr.Point(x2, self.height - y2))
-        line.setOutline(color)
-        line.draw(self._img)
+        # type: (int, int, int, int, [int, int, int]) -> Scene
+        pygame.draw.line(self._img, color, [x1, self.height - y1], [x2, self.height - y2], 1)
         return self
 
     Data_value = [0] * 1000
@@ -189,13 +200,13 @@ class Scene(object):
         n = r
         while n <= r:
             i = 1
-            if n < i:
+            if (n < i):
                 n = r
             while i <= n:
                 rrr = math.sqrt(
                     r * (
-                            pow(math.cos(0 + math.pi / i) - math.cos(0), 2) +
-                            pow(math.sin(0 + math.pi / i) - math.sin(0), 2)
+                            pow(math.cos((0) + math.pi / (i)) - math.cos((0)), 2) +
+                            pow(math.sin((0) + math.pi / (i)) - math.sin((0)), 2)
                     )
                 )
                 if rrr <= 1:
@@ -213,30 +224,30 @@ class Scene(object):
 
         return self.Data_value[r - 11]
 
+    '''
     def polyLines(self, color, points):
-        # type: (str, [[2]]) -> Scene
-        first = points.pop(0)
-
-        last = first
-
-        for next in points:
-            self.line(last[0], last[1], next[0], next[1], color)
-            last = next
-
-        self.line(last[0], last[1], first[0], first[1], color)
-
-        return self
+      first = points.pop(0)
+  
+      last = first
+  
+      for next in points:
+        self.line(last[0], last[1], next[0], next[1], color)
+        last = next
+  
+      self.line(last[0], last[1], first[0], first[1], color)
+        
+      return self
+      '''
 
     def ovalspin(self, _cx, _cy, _r1, _r2, u, _color):
-        # type: (int, int, int, int, int, str) -> Scene
+        # type: (int, int, int, int, int, [int, int, int]) -> Scene
         return self.arc(_cx, _cy, _r1, _r2, _color, 0, 360, u)
 
     def circle(self, _cx, _cy, _r, _color):
         # type: (int, int, int, str) -> Scene
-        c = gr.Circle(gr.Point(_cx, _cy), _r)
-        c.setOutline(_color)
-        c.draw(self._img)
-        return self  # .arc(_cx, _cy, _r, _r, _color, 0, 360)
+        # return self.arc(_cx, _cy, _r, _r, _color, 0, 360)
+        pygame.draw.arc(self._img, _color, [_cx - _r, _cy - _r, 2 * (_r), 2 * (_r)], 0, math.pi * 2)
+        return self
 
     def getacrpoint(self, _r1, _r2, _a, u=0):
         # type: (int, int, int, int) -> [int, int]
@@ -271,16 +282,18 @@ class Scene(object):
             rrr = math.fabs(x) + math.fabs(y)
 
             # self.setpixel(_cx + x, _cy + y, _color)
+            # pygame.draw.circle(self._img, _color, [math.trunc(_cx + x), math.trunc(_cy + y)], 1)
             self.circle(_cx + x, _cy + y, 3, _color)
 
             da = math.pi / self.getradstep(math.trunc(rrr) + 1)
             a0 -= da
-        self.polyLines(_color, points)
+        # self.polyLines(color, points)
+        pygame.draw.lines(self._img, _color, True, points)
         return self
 
     def setpixel(self, _x, _y, _color):
         # type: (int, int, str) -> Scene
-        self._img.plot(_x, _y, _color)
+        self.line(_x, _y, _x, _y, _color)
         return self
 
     # todo
@@ -386,20 +399,53 @@ class Scene(object):
             ._pushstep() \
             ._moveto(self._x + dx, self._y + dy)
 
+    def center(self):
+        # type: () -> Scene
+        return self \
+            ._moveto(self.width / 2, self.height / 2)
+
     def clear(self):
         # type: () -> Scene
-        self._img.delete("all")
+        # Clear the screen and set the screen background
+        self._img.fill(self._bg)
         return self
 
     def draw(self):
         # type: () -> Scene
-        while not self._img.isClosed():
-            time.sleep(.1)  # give up thread
+        # Loop as long as done == False
+        while not self.done:
+            for event in pygame.event.get():  # User did something
+                if event.type == pygame.QUIT:  # If user clicked close
+                    self.done = True  # Flag that we are done so we exit this loop
+
+            # All drawing code happens after the for loop and but
+            # inside the main while not done loop.
+
             self.clear().redraw()
-            # self._img.getMouse()
-        self._img.close()
-        return self
+
+            # Go ahead and update the screen with what we've drawn.
+            # This MUST happen after all the other drawing commands.
+            pygame.display.flip()
+
+            # This limits the while loop to a max of 60 times per second.
+            # Leave this out and we will use all CPU we can.
+            self.clock.tick(60)
 
     def redraw(self):
         # type: () -> Scene
         return self
+
+    def lines(self):
+        # type: () -> Scene
+        """
+        рисуем линии координат
+        :return:
+        """
+
+        cx = self.width / 2  # центр по х
+        cy = self.height / 2  # центр по у
+        return self \
+            ._setcolor(0, 255, 0)._moveto(cx, 0)._linestep(0, self.height)._moveto(0, cy)._linestep(self.width, 0)
+
+# Be IDLE friendly
+pygame.quit()
