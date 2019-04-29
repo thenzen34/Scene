@@ -1,37 +1,11 @@
 # coding=utf-8
-from math import *
-from class_scene3d import Scene3d
-import random
-
-
-class Sphere(Scene3d):
-    M = 15
-    N = 15
-
-    Size_div2 = M * N
-    Size = 2 * Size_div2
-
-    def initialize(self):  # type: () -> Scene3d
-        for i in range(self.Size_div2):
-            a = random.uniform(0, 2 * pi)
-            b = random.uniform(0, 2 * pi)
-
-            sina = sin(a)
-            cosa = cos(a)
-
-            sinb = sin(b)
-            cosb = cos(b)
-
-            self.Points[i].x = cosa * cosb
-            self.Points[i].y = cosa * sinb
-            self.Points[i].z = sina
-        return super(Sphere, self).initialize()
+from core.class_scene3d import Scene3d
 
 
 class Cube(Scene3d):
     Size = 8
 
-    def initialize(self):  # type: () -> Scene3d
+    def initialize(self):  # type: () -> Cube
         self.Points[0].x = -1
         self.Points[0].y = -1
         self.Points[0].z = -1
@@ -69,7 +43,7 @@ class Cube(Scene3d):
 
         return super(Cube, self).initialize()
 
-    def drawing(self):  # type: () -> Scene3d
+    def drawing(self):  # type: () -> Cube
         self.line(self.DrawPoint[0].x, self.DrawPoint[0].y, self.DrawPoint[1].x, self.DrawPoint[1].y, self.BACKGROUND)
         self.line(self.DrawPoint[0].x, self.DrawPoint[0].y, self.DrawPoint[4].x, self.DrawPoint[4].y, self.BACKGROUND)
 

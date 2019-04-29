@@ -2,7 +2,7 @@
 # from class_scene import Scene
 import random
 
-from class_scene_pygame import Scene
+from .class_scene_pygame import Scene
 from math import *
 
 
@@ -138,9 +138,12 @@ class Scene3d(Scene):
     def animation(self):  # type: () -> Scene3d
         return self
 
-    def redraw(self):  # type: () -> Scene3d
+    def clear(self):
         # можно вызывать Scene.clear() для очистки рабочего поля
         # но (возможно?) продуктивнее очищать в методе drawing поштучно
+        return self
+
+    def redraw(self):  # type: () -> Scene3d
         self \
             .animation() \
             .drawing()

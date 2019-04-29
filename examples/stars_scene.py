@@ -1,7 +1,7 @@
 import math
 
 # from class_test import Scene
-from class_scene_pygame import Scene
+from core.class_scene_pygame import Scene
 
 
 class StarsScene(Scene):
