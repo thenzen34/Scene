@@ -3,6 +3,7 @@
 
 # from class_scene import Scene
 from core.class_scene_pygame import Scene
+# from core.class_scene_svg import Scene
 from math import *
 
 

@@ -2,7 +2,9 @@ import math
 
 # from class_test import Scene
 from core.class_scene_pygame import Scene
+import pygame
 
+calc_int = False
 
 class StarsScene(Scene):
     betta = 0
@@ -26,10 +28,36 @@ class StarsScene(Scene):
         cnt2 = 18
         alfa2 = 2 * math.pi / cnt2
 
+        x1 = 10
+        y1 = 100
+        x2 = 2 * 50
+        y2 = -100
+
         for ix in range(cnt):
-            self.ovalspin(cx, cy, r1, r2, self.betta + ix * alfa, color)
+            u = self.betta + ix * alfa
+            if calc_int:
+                result = self.calc_intersection_ellipse_line([0, 0, r1, r2, u, 0, 360], [x1, y1, x2, y2])
+
+                if len(result) > 0:
+                    # есть точка
+                    x, y = result
+
+                    self.center() \
+                        ._step(x, y)._setcolor(0, 0, 255)._circle(10)._popstep() \
+                        ._step(x1, y1)._linestep(x2 - x1, y2 - y1)
+
+                    pygame.font.init()
+
+                    font = pygame.font.Font(None, 72)
+                    text = font.render("%0.2f x %0.2f" % (x, y), 1, (0, 100, 0))
+                    place = text.get_rect(center=(self.width / 2, self.height - 72))
+                    self.text(text, place)
+
+
+
+            self.ovalspin(cx, cy, r1, r2, u, color)
             for iy in range(cnt2):
-                x, y = self.getacrpoint(r1, r2, iy * alfa2, self.betta + ix * alfa)
+                x, y = self.getacrpoint(r1, r2, iy * alfa2, u)
                 self.circle(cx + x, cy + y, 3, self.getcolor(0, 255, 0))
                 self.line(cx, cy, cx + x, cy + y, self.getcolor(0, 0, 255))
 
@@ -54,3 +82,5 @@ t.draw()
 
 		return self
 '''
+
+#140 - 150
