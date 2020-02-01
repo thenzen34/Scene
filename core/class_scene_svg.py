@@ -1,8 +1,8 @@
-import svgwrite
-import math
-from core.base_scene import BaseScene
 import time
-from svgwrite import cm
+
+import svgwrite
+
+from core.base_scene import BaseScene
 
 cm_to_point = 28.3464566929  # in swf
 cm_to_pixel = 37.7952755906  # in web
@@ -24,10 +24,10 @@ class Scene(BaseScene):
         # but I don't have to care about it, I just draw 8x8 squares, each 10x10 USER-UNITS
         # self._img.setBackground(self._bg)
 
-    def getpixel(self, x, y):
+    def get_pixel(self, x, y):
         return self._img.getPixel(x, y)
 
-    def getcolor(self, r, g, b):
+    def get_color(self, r, g, b):
         # type: (int, int, int) -> str
         return svgwrite.rgb(r, g, b, '%')
 
@@ -45,7 +45,7 @@ class Scene(BaseScene):
         # type: (int, int, int, int, [int, int, int]) -> Scene
         return self.line(x1, self.height - y1, x2, self.height - y2, color)
 
-    def polyLines(self, color, points):
+    def poly_lines(self, color, points):
         # type: (str, [int, int]) -> Scene
         if self.closed:
             polygon = self._img.polygon(points, stroke=color, fill='none')  # type : shapes.Polygon
@@ -107,6 +107,7 @@ class Scene(BaseScene):
 
         return self
 '''
+
     def redraw(self):
         pass
 

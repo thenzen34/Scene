@@ -4,9 +4,9 @@
 # from class_scene import Scene
 import random
 import time
+from math import *
 
 from core.class_scene_pygame import Scene
-from math import *
 
 
 class DerivativeFunctScene(Scene):

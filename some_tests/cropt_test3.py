@@ -8,7 +8,7 @@ imageObject = Image.open(faceName)
 
 # cropped     = imageObject.crop((100,30,400,300))
 image_path = "./doom/%s_%s.png"
-format = "PNG"
+fmt = "PNG"
 
 dx = 0  # todo to width + transparent
 dy = 0
@@ -45,7 +45,7 @@ for col in cols:
 
         img.putdata(newData)
 
-        img.save(image_path % (row, col), format)
+        img.save(image_path % (row, col), fmt)
 
 # Display the cropped portion
 

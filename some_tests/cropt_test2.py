@@ -8,9 +8,9 @@ imageObject = Image.open(faceName)
 
 # cropped     = imageObject.crop((100,30,400,300))
 image_path = "./2.png"
-format = "PNG"
+fmt = "PNG"
 
-dx = 2 #todo to width + transparent
+dx = 2  # todo to width + transparent
 dy = 1
 
 x_offset = 4 - dx
@@ -29,7 +29,7 @@ y_start = y_offset + (row - 1) * (diff_y + height)
 
 box = (x_start, y_start, x_start + width, y_start + height)
 cropped = imageObject.crop(box)
-cropped.save(image_path, format)
+cropped.save(image_path, fmt)
 
 # Display the cropped portion
 

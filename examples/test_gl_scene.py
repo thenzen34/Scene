@@ -1,9 +1,6 @@
-from core.class_scene_Gl import *
 import math as mt
 
-
-class glCube2():
-    pass
+from core.class_scene_Gl import *
 
 
 class TestGlScene(Scene):
@@ -49,11 +46,11 @@ class TestGlScene(Scene):
             self.rquad = 2
 
     def point_pos(self, cnt, r):
-        # type: (int, int) -> Scene
+        # type: (int, int) -> TestGlScene
         points = [(r * mt.cos(a), r * mt.sin(a)) for a in [2 * mt.pi * i / cnt for i in range(cnt)]]
 
         glPointSize(7.0)
-        self.setpixels(points, self.getcolor(1.0, 0.0, 0.0))
+        self.setpixels(points, self.get_color(1.0, 0.0, 0.0))
         '''
         for pt in points:
             self.setpixel(pt[0], pt[1], self.getcolor(1.0, 0.0, 0.0))
@@ -62,12 +59,12 @@ class TestGlScene(Scene):
         glLineWidth(2.0)
         for pt1 in points:
             for pt2 in points:
-                self.line(pt1[0], pt1[1], pt2[0], pt2[1], self.getcolor(0.0, 1.0, 0.0))
+                self.line(pt1[0], pt1[1], pt2[0], pt2[1], self.get_color(0.0, 1.0, 0.0))
 
         return self
 
     def redraw(self):
-        # type: () -> Scene
+        # type: () -> TestGlScene
 
         lol = 8
 

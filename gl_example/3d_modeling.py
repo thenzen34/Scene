@@ -1,7 +1,7 @@
 # for 3DSage Simple 3D Modeling Program - OpenGL Tutorial https://www.youtube.com/watch?v=exQ43PFWJBU
 from OpenGL.GL import *
-from OpenGL.GLUT import *
 from OpenGL.GLU import *
+from OpenGL.GLUT import *
 
 global cx, cy, cz, cn
 
@@ -17,6 +17,7 @@ class Quads:
 
 
 Q = [Quads() for x in range(100)]
+
 
 def addQuads():
     global cn
@@ -45,8 +46,9 @@ def addQuads():
         Q[cn].y4 = cy
         Q[cn].z4 = cz
 
+
 def drawQuads():
-    for i in range(Q[0].total+1):
+    for i in range(Q[0].total + 1):
         glPushMatrix()
         glBegin(GL_QUADS)
         glColor3f(Q[i].r, Q[i].g, Q[i].b)
@@ -56,6 +58,7 @@ def drawQuads():
         glVertex3f(Q[i].x4, Q[i].y4, Q[i].z4)
         glEnd()
         glPopMatrix()
+
 
 def theCube():
     global cx, cy, cz

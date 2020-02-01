@@ -1,5 +1,4 @@
 from core.class_scene_Gl import *
-import math
 
 
 class TPoint:
@@ -273,7 +272,7 @@ class TestGlScene(SceneThird):
         return self
 
     def redraw(self):
-        # type: () -> Scene
+        # type: () -> TestGlScene
         self.draw_cursor()
 
         self.player.draw(self)  # recalc x, y or save it in %% of width/height

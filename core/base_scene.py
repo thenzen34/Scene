@@ -14,7 +14,7 @@ class BaseScene(object):
 
     _bg = 'black'
 
-    def _setDigitalSize(self, size):
+    def _set_digital_size(self, size):
         # type: (int) -> BaseScene
         _size = size
 
@@ -143,10 +143,10 @@ class BaseScene(object):
 
         self._bg = bg
 
-    def getpixel(self, x, y):
+    def get_pixel(self, x, y):
         return self
 
-    def getcolor(self, r, g, b):
+    def get_color(self, r, g, b):
         return self
 
     def line(self, x1, y1, x2, y2, color):
@@ -157,11 +157,11 @@ class BaseScene(object):
     def line2(self, x1, y1, x2, y2, color):
         return self
 
-    def polyLines(self, color, points):
+    def poly_lines(self, color, points):
         return self
 
     def rectangle(self, x1, y1, x2, y2, color):
-        return self.polyLines(color, [[x1, y1], [x1, y2], [x2, y2], [x2, y1]])
+        return self.poly_lines(color, [[x1, y1], [x1, y2], [x2, y2], [x2, y1]])
 
     def ovalspin(self, _cx, _cy, _r1, _r2, u, _color):
         return self
@@ -170,7 +170,7 @@ class BaseScene(object):
         return self
 
     def arc(self, _cx, _cy, _r1, _r2, _color, _a, _arc, u=0):
-        # type: (int, int, int, int, str, int, int, int) -> Scene
+        # type: (int, int, int, int, str, int, int, int) -> BaseScene
         points = []
         alfastart = math.radians(_a)
         alfaend = math.radians(_arc)
@@ -193,7 +193,7 @@ class BaseScene(object):
 
         points.append([_cx + x, _cy + y])
 
-        self.polyLines(_color, points)
+        self.poly_lines(_color, points)
         return self
 
     def ellipse(self, _cx, _cy, _r1, _r2, _color, u=0):
@@ -206,13 +206,13 @@ class BaseScene(object):
         n = r
         while n <= r:
             i = 1
-            if (n < i):
+            if n < i:
                 n = r
             while i <= n:
                 rrr = math.sqrt(
                     r * (
-                            pow(math.cos((0) + math.pi / (i)) - math.cos((0)), 2) +
-                            pow(math.sin((0) + math.pi / (i)) - math.sin((0)), 2)
+                            pow(math.cos(0 + math.pi / i) - math.cos(0), 2) +
+                            pow(math.sin(0 + math.pi / i) - math.sin(0), 2)
                     )
                 )
                 if rrr <= 1:
@@ -231,7 +231,7 @@ class BaseScene(object):
         return self.Data_value[r - 11]
 
     def getacrpoint(self, _r1, _r2, _a, u=0):
-        # type: (int, int, int, int) -> [int, int]
+        # type: (float, float, float, float) -> [int, int]
         a0 = _a
 
         x = _r1 * math.cos(a0)
@@ -251,7 +251,7 @@ class BaseScene(object):
 
     closed = True
 
-    def setClosed(self, value):
+    def set_closed(self, value):
         # type: (bool) -> BaseScene
         self.closed = value
         return self
@@ -275,7 +275,7 @@ class BaseScene(object):
 
     def _setcolor(self, _r, _g, _b):
         # type: (int, int, int) -> BaseScene
-        self._color = self.getcolor(_r, _g, _b)
+        self._color = self.get_color(_r, _g, _b)
         return self
 
     def _lineto(self, x, y):
@@ -296,7 +296,7 @@ class BaseScene(object):
             .line(self._x, self._y, self._x + x, self._y + y, self._color) \
             ._moveto(self._x + x, self._y + y)
 
-    def _lineANDstep(self, x, y):
+    def _line_and_step(self, x, y):
         # type: (float, float) -> BaseScene
         return self \
             .line(self._x, self._y, self._x + x, self._y + y, self._color) \
@@ -359,7 +359,7 @@ class BaseScene(object):
             ._setcolor(_r, _g, _b)
 
     def _step(self, dx, dy):
-        # type: (int, int) -> BaseScene
+        # type: (float, float) -> BaseScene
         return self \
             ._pushstep() \
             ._moveto(self._x + dx, self._y + dy)

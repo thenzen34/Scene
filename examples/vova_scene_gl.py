@@ -1,8 +1,8 @@
 # coding=utf-8
+from math import *
 from random import randint
 
 from core.class_scene_Gl import *
-from math import *
 
 
 class TurtleScene(Scene2d):

@@ -1,10 +1,10 @@
 # Импортируем все необходимые библиотеки:
 import math
 
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
 import numpy
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
 
 from core.base_scene import BaseScene
 
@@ -102,7 +102,7 @@ class Scene(BaseScene):
         if state in [state_down, state_up]:
             if button in callbacks[state]:
                 callback = callbacks[state][button]
-                if callback != None:
+                if callback is not None:
                     callback(x, y)
             else:
                 print(args)
@@ -111,9 +111,9 @@ class Scene(BaseScene):
 
     debug = False
 
-    def print(self, str):
+    def print(self, string):
         if self.debug:
-            print(str)
+            print(string)
 
     start_click = 0, 0
 
@@ -249,11 +249,11 @@ class Scene(BaseScene):
             ._setcolor(0, 255, 0)._moveto(0, -cy)._linestep(0, self.height)._moveto(-cx, 0)._linestep(self.width, 0)
         return self
 
-    def getpixel(self, x, y):
+    def get_pixel(self, x, y):
         return 0
 
-    def getcolor(self, r, g, b):
-        # type: (int, int, int) -> Tuple[int, int, int, int]
+    def get_color(self, r, g, b):
+        # type: (int, int, int) -> [int, int, int, int]
         return r / 255, g / 255, b / 255, 1
 
     def line(self, x1, y1, x2, y2, color):
@@ -272,15 +272,15 @@ class Scene(BaseScene):
         # type: (int, int, int, int, [int, int, int]) -> Scene
         return self.line(x1, self.height - y1, x2, self.height - y2, color)
 
-    def polyLines(self, color, points):
+    def poly_lines(self, color, points):
         # type: (str, [int, int]) -> Scene
         first = points.pop(0)
 
         last = first
 
-        for next in points:
-            self.line(last[0], last[1], next[0], next[1], color)
-            last = next
+        for next_point in points:
+            self.line(last[0], last[1], next_point[0], next_point[1], color)
+            last = next_point
 
         if self.closed:
             self.line(last[0], last[1], first[0], first[1], color)
@@ -292,7 +292,7 @@ class Scene(BaseScene):
         return self.arc(_cx, _cy, _r1, _r2, _color, 0, 360, u)
 
     def circle(self, _cx, _cy, _r, _color, polylines=False):
-        # type: (int, int, int, str) -> Scene
+        # type: (int, int, int, str, bool) -> Scene
 
         if polylines:
             return self.arc(_cx, _cy, _r, _r, _color, 0, 360)
@@ -447,7 +447,7 @@ class SceneThird(Scene):
     def translate_up(self):
         self.zTra += 0.05
 
-    def defaultScene(self):
+    def default_scene(self):
         self.xRot = 0
         self.yRot = 0
         self.zRot = 0
@@ -482,6 +482,10 @@ class SceneThird(Scene):
 
 
 class Scene2d(SceneThird):
+    """
+    сцена для 2х мерных рисунков без вращения
+    но с приближением и перемещением мышкой
+    """
     ddx = 0
     ddy = 0
 
@@ -505,11 +509,10 @@ class Scene2d(SceneThird):
         self.print('callback gl_mouse_motion in point (%d, %d)' % (x, y))
 
         if self.left_button_down:
-            dx, dy = self.get_xy_scene(x - self.start_click[0] + self.width / 2, -y + self.start_click[1] + self.height / 2)
-            # self.ddx, self.zTra = dx, -dy
+            dx, dy = self.get_xy_scene(x - self.start_click[0] + self.width / 2,
+                                       -y + self.start_click[1] + self.height / 2)
             self.ddx = self.last_ddx_ddy[0] + dx / self.nSca
             self.ddy = self.last_ddx_ddy[1] - dy / self.nSca
-            # glTranslatef((), 0.0, 0.0)
 
     def gl_key_pressed(self, *args):
         super().gl_key_pressed(*args)

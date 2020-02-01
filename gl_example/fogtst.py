@@ -45,7 +45,7 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 
-class Variables():
+class Variables:
     doubleBuffer = GL_TRUE
     ''' *INDENT-OFF* '''
     plane = [1.0, 0.0, -1.0, 0.0]
@@ -142,7 +142,7 @@ def Draw():
 
     glPopMatrix()
 
-    if (variables.doubleBuffer):
+    if variables.doubleBuffer:
         glutSwapBuffers()
     else:
         glFlush()
@@ -162,9 +162,9 @@ def main():
     glutInit(sys.argv)
     Args(sys.argv)
 
-    type = GLUT_RGB | GLUT_DEPTH
-    type |= GLUT_DOUBLE if variables.doubleBuffer else GLUT_SINGLE
-    glutInitDisplayMode(type)
+    color_type = GLUT_RGB | GLUT_DEPTH
+    color_type |= GLUT_DOUBLE if variables.doubleBuffer else GLUT_SINGLE
+    glutInitDisplayMode(color_type)
     glutInitWindowSize(300, 300)
     glutCreateWindow("Fog Test")
 
@@ -233,7 +233,6 @@ def main():
     glVertex3fv(variables.scp[17])
     glEnd()
 
-
     glEndList()
     ''' *INDENT-ON* '''
 
@@ -247,5 +246,6 @@ def main():
     glutDisplayFunc(Draw)
     glutMainLoop()
     # return 0             ''' ANSI C requires main to return int. '''
+
 
 main()

@@ -116,32 +116,32 @@ def main():
     glMaterialfv(GL_FRONT, GL_DIFFUSE, variables.mat_red_diffuse)
     GLU_raw.gluBeginSurface(variables.nurb)
     GLU_raw.gluNurbsSurface(variables.nurb, 8, variables.knots, 8, variables.knots,
-                    4 * 3, 3, variables.pts1,
-                    4, 4, GL_MAP2_VERTEX_3)
+                            4 * 3, 3, variables.pts1,
+                            4, 4, GL_MAP2_VERTEX_3)
     GLU_raw.gluEndSurface(variables.nurb)
 
     # Render green hill.
     glMaterialfv(GL_FRONT, GL_DIFFUSE, variables.mat_green_diffuse)
     GLU_raw.gluBeginSurface(variables.nurb)
     GLU_raw.gluNurbsSurface(variables.nurb, 8, variables.knots, 8, variables.knots,
-                    4 * 3, 3, variables.pts2,
-                    4, 4, GL_MAP2_VERTEX_3)
+                            4 * 3, 3, variables.pts2,
+                            4, 4, GL_MAP2_VERTEX_3)
     GLU_raw.gluEndSurface(variables.nurb)
 
     # Render blue hill.
     glMaterialfv(GL_FRONT, GL_DIFFUSE, variables.mat_blue_diffuse)
     GLU_raw.gluBeginSurface(variables.nurb)
     GLU_raw.gluNurbsSurface(variables.nurb, 8, variables.knots, 8, variables.knots,
-                    4 * 3, 3, variables.pts3,
-                    4, 4, GL_MAP2_VERTEX_3)
+                            4 * 3, 3, variables.pts3,
+                            4, 4, GL_MAP2_VERTEX_3)
     GLU_raw.gluEndSurface(variables.nurb)
 
     # Render yellow hill.
     glMaterialfv(GL_FRONT, GL_DIFFUSE, variables.mat_yellow_diffuse)
     GLU_raw.gluBeginSurface(variables.nurb)
     GLU_raw.gluNurbsSurface(variables.nurb, 8, variables.knots, 8, variables.knots,
-                    4 * 3, 3, variables.pts4,
-                    4, 4, GL_MAP2_VERTEX_3)
+                            4 * 3, 3, variables.pts4,
+                            4, 4, GL_MAP2_VERTEX_3)
     GLU_raw.gluEndSurface(variables.nurb)
 
     glEndList()

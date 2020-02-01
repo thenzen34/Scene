@@ -26,23 +26,24 @@ dwg.save()
 
 '''
 import math
+
 import svgwrite
 
-dwg = svgwrite.Drawing(filename="test.svg", debug=True, size=(4000,1000))
+dwg = svgwrite.Drawing(filename="test.svg", debug=True, size=(4000, 1000))
 
-elem = dwg.g(class_ = 'tz')
+elem = dwg.g(class_='tz')
 start_x = 250
 start_y = 300
 radius = 100
 for i in range(34):
-    degree0 = 0 + i*10
-    degree1 = 10 + i*10
+    degree0 = 0 + i * 10
+    degree1 = 10 + i * 10
     radians0 = math.radians(degree0)
     radians1 = math.radians(degree1)
-    dx0 = radius*(math.sin(radians0))
-    dy0 = radius*(math.cos(radians0))
-    dx1 = radius*(math.sin(radians1))
-    dy1 = radius*(math.cos(radians1))
+    dx0 = radius * (math.sin(radians0))
+    dy0 = radius * (math.cos(radians0))
+    dx1 = radius * (math.sin(radians1))
+    dy1 = radius * (math.cos(radians1))
 
     m0 = dy0
     n0 = -dx0
@@ -50,9 +51,9 @@ for i in range(34):
     n1 = dx0 - dx1
 
     w = dwg.path(d="M {0},{1} l {2},{3} a {4},{4} 0 0,0 {5},{6} z".format(start_x, start_y, m0, n0, radius, m1, n1),
-             fill="#00ff00",
-             stroke="none",
-            )
+                 fill="#00ff00",
+                 stroke="none",
+                 )
     elem.add(w)
 dwg.add(elem)
 dwg.save()

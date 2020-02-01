@@ -50,11 +50,11 @@
  '''
 
 from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLUT.fonts import *
 from OpenGL.GLU import *
+from OpenGL.GLUT import *
 
 global GLUT_STROKE_ROMAN
+
 
 class Highlight(object):
     BUFSIZE = 512
@@ -82,8 +82,8 @@ class Highlight(object):
         glPushMatrix()
         glTranslatef(x, y, 0)
         params = list(args)
-        format = params.pop(0)
-        string = format % tuple(params)
+        fmt = params.pop(0)
+        string = fmt % tuple(params)
         for p in string:
             glutStrokeCharacter(GLUT_STROKE_ROMAN, ord(p))
 
@@ -98,7 +98,7 @@ class Highlight(object):
         light_position = {1.0, 1.0, 1.0}
 
         glLightfv(GL_LIGHT0, GL_AMBIENT, *light_ambient)
-        #glLightfv(GL_LIGHT0, GL_DIFFUSE, *light_diffuse)
+        # glLightfv(GL_LIGHT0, GL_DIFFUSE, *light_diffuse)
         glLightfv(GL_LIGHT0, GL_SPECULAR, *light_specular)
         glLightfv(GL_LIGHT0, GL_POSITION, *light_position)
 
@@ -133,7 +133,7 @@ class Highlight(object):
     def draw(self):
         glPushMatrix()
         glScalef(1.3, 1.3, 1.3)
-        #glRotatef(20.0, 1.0, 0.0, 0.0)
+        # glRotatef(20.0, 1.0, 0.0, 0.0)
 
         glRotatef(self.rquad, self.speed, self.speed, self.speed)
 

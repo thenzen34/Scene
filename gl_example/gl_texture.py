@@ -1,13 +1,13 @@
-#https://stackoverflow.com/questions/42986754/pyopengl-sphere-with-texture
+# https://stackoverflow.com/questions/42986754/pyopengl-sphere-with-texture
 
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
-from OpenGL.GL import *
-import sys
-from PIL import Image as Image
 import numpy
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+from PIL import Image as Image
 
 name = 'Navigation paradigm'
+
 
 def main():
     glutInit(sys.argv)
@@ -38,11 +38,12 @@ def main():
     glutMainLoop()
     return
 
+
 def display_scene():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glPushMatrix()
     # Textured thing
-    tex = read_texture('brick.jpg') #2desertbk
+    tex = read_texture('brick.jpg')  # 2desertbk
     qobj = gluNewQuadric()
     gluQuadricTexture(qobj, GL_TRUE)
     glEnable(GL_TEXTURE_2D)
@@ -65,6 +66,7 @@ def display_scene():
     glutSwapBuffers()
     return
 
+
 def read_texture(filename):
     img = Image.open(filename)
     img_data = numpy.array(list(img.getdata()), numpy.int8)
@@ -80,6 +82,7 @@ def read_texture(filename):
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.size[0], img.size[1], 0, GL_RGB, GL_UNSIGNED_BYTE, img_data)
     return textID
+
 
 if __name__ == '__main__':
     main()

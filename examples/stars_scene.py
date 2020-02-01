@@ -1,8 +1,9 @@
 import math
 
+import pygame
+
 # from class_test import Scene
 from core.class_scene_pygame import Scene
-import pygame
 
 calc_int = False
 
@@ -11,7 +12,7 @@ class StarsScene(Scene):
     betta = 0
 
     def pic(self, draw=True):
-        color = self.getcolor(255, 0, 0)
+        color = self.get_color(255, 0, 0)
         if not draw:
             color = self._bg
 
@@ -57,8 +58,8 @@ class StarsScene(Scene):
             self.ovalspin(cx, cy, r1, r2, u, color)
             for iy in range(cnt2):
                 x, y = self.getacrpoint(r1, r2, iy * alfa2, u)
-                self.circle(cx + x, cy + y, 3, self.getcolor(0, 255, 0))
-                self.line(cx, cy, cx + x, cy + y, self.getcolor(0, 0, 255))
+                self.circle(cx + x, cy + y, 3, self.get_color(0, 255, 0))
+                self.line(cx, cy, cx + x, cy + y, self.get_color(0, 0, 255))
 
         return self
 

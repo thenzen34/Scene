@@ -1,19 +1,18 @@
-import pygame
-from pygame.locals import *
+import math as mt
 
+import pygame
 from OpenGL.GL import *
 from OpenGL.GLU import *
-
-import numpy as np
-import math as mt
+from pygame.locals import *
 
 pos_x = []
 pos_y = []
-pos= []
+pos = []
 lol = 8
 
+
 def point_pos(p, r):
-    points = [(r*mt.cos(t), r*mt.sin(t)) for t in [2*mt.pi * i/p for i in range(p)]]
+    points = [(r * mt.cos(t), r * mt.sin(t)) for t in [2 * mt.pi * i / p for i in range(p)]]
 
     glPointSize(7.0)
     glBegin(GL_POINTS)
@@ -31,16 +30,17 @@ def point_pos(p, r):
             glVertex2f(*pt2)
     glEnd()
 
+
 def main():
     pygame.init()
-    display = (800,600)
-    pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
+    display = (800, 600)
+    pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
 
-    gluPerspective(90, (display[0]/display[1]), 0.1, 50.0)
+    gluPerspective(90, (display[0] / display[1]), 0.1, 50.0)
 
-    glTranslatef(0.0,0.0, -5)
+    glTranslatef(0.0, 0.0, -5)
 
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     point_pos(lol, 2)
     pygame.display.flip()
 
@@ -50,7 +50,8 @@ def main():
                 pygame.quit()
                 quit()
 
-        #glRotatef(1, 1, 0, 1)
+        # glRotatef(1, 1, 0, 1)
         pygame.time.wait(10)
+
 
 main()

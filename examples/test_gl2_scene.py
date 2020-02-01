@@ -1,5 +1,4 @@
 from core.class_scene_Gl import *
-import numpy, math
 
 
 class CubeGlScene(Scene):
@@ -74,8 +73,8 @@ class CubeGlScene(Scene):
             m = glGetDoublev(GL_MODELVIEW_MATRIX).flatten()
             self.args_list.append([glTranslate, (fwd * m[2], fwd * m[6], fwd * m[10])])
             self.args_list.append([glTranslate, (strafe * m[0], strafe * m[4], strafe * m[8])])
-            #glTranslate(fwd * m[2], fwd * m[6], fwd * m[10])
-            #glTranslate(strafe * m[0], strafe * m[4], strafe * m[8])
+            # glTranslate(fwd * m[2], fwd * m[6], fwd * m[10])
+            # glTranslate(strafe * m[0], strafe * m[4], strafe * m[8])
 
     def cube(self):
         glPushMatrix()
@@ -120,7 +119,7 @@ class CubeGlScene(Scene):
         glPopMatrix()
 
     def redraw(self):
-        # type: () -> Scene
+        # type: () -> CubeGlScene
         self.cube()
 
         self.rquad = self.rquad - 0.15

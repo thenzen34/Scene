@@ -1,6 +1,7 @@
 # coding=utf-8
-from core.class_scene import Scene
 from math import *
+
+from core.class_scene import Scene
 
 
 class TurtleScene(Scene):
@@ -35,10 +36,10 @@ class MagnetsBaseScene(TurtleScene):
 
     def put_stick(self):
         return self.move_step(self.length)
-    
+
     def put_stick_and_ball(self):
         return self.put_stick().put_ball()
-        
+
     def show(self):
         self.redraw()
         self._img.wait_window()

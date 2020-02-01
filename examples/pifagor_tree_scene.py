@@ -1,10 +1,11 @@
 # coding=utf-8
 # import math
 
-# from class_scene import Scene
-from core.class_scene_pygame import Scene
 # from core.class_scene_svg import Scene
 from math import *
+
+# from class_scene import Scene
+from core.class_scene_pygame import Scene
 
 
 class PiTree1Scene(Scene):
@@ -38,9 +39,9 @@ class PiTree1Scene(Scene):
         return self
 
     def drawing(self, por):  # type: (int) -> PiTree1Scene
-        l = 15  # размерность
+        length = 15  # размерность
 
-        self.lines()._setcolor(255, 0, 0).add(self.width / 2 + l * 5, self.height, 5 * l, 0 * pi / 8, por - 1)
+        self.lines()._setcolor(255, 0, 0).add(self.width / 2 + length * 5, self.height, 5 * length, 0 * pi / 8, por - 1)
         return self
 
     def redraw(self):  # type: () -> PiTree1Scene

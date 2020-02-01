@@ -1,20 +1,40 @@
 from __future__ import division
-import pygame, math, numpy
+
+import math
+import numpy
+import pygame
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
 
 class Spectator:
     def __init__(self, w=640, h=480, fov=75):
+        self.normals = numpy.array([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+                                    1, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, -1, 0, 0, -1, 1, 0, 0, 1,
+                                    0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0,
+                                    -1, 0, 0, -1, 0, 0, -1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+                                    0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0
+                                    ], 'f').reshape(-1, 3)
+        self.indices = numpy.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+                                    14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+                                    32, 33, 34, 35], 'i')
+        self.points = numpy.array([2.4, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 2.4, 0, 0,
+                                   2.4, 0, 2, 0, 0, 2, 0, -1.66, 0, 0, 0, 0, 0, -1.66, 0, 2.4, 0, 0, 0, 0, 0,
+                                   2.4, 0, 0, 2.4, -1.66, 2, 2.4, 0, 2, 2.4, -1.66, 2, 0, 0, 2, 2.4, 0, 2, 0,
+                                   -1.66, 0, 0, 0, 2, 0, -1.66, 2, 2.4, 0, 0, 0, -1.66, 0, 2.4, -1.66, 0,
+                                   2.4, -1.66, 2, 2.4, 0, 0, 2.4, -1.66, 0, 0, 0, 2, 2.4, -1.66, 2, 0,
+                                   -1.66, 2, 2.4, -1.66, 2, 0, -1.66, 0, 0, -1.66, 2, 0, -1.66, 0, 2.4,
+                                   -1.66, 2, 2.4, -1.66, 0], 'f').reshape(-1, 3)
         pygame.init()
         pygame.display.set_mode((640, 480), pygame.OPENGL | \
                                 pygame.DOUBLEBUF)
         glMatrixMode(GL_PROJECTION)
         aspect = w / h
-        gluPerspective(fov, aspect, 0.001, 100000.0);
+        gluPerspective(fov, aspect, 0.001, 100000.0)
         glMatrixMode(GL_MODELVIEW)
 
-    def simple_lights(self):
+    @staticmethod
+    def simple_lights():
         glEnable(GL_LIGHTING)
         glShadeModel(GL_SMOOTH)
         glEnable(GL_LIGHT0)
@@ -23,7 +43,8 @@ class Spectator:
         glEnable(GL_DEPTH_TEST)
         glDepthFunc(GL_LEQUAL)
 
-    def simple_camera_pose(self):
+    @staticmethod
+    def simple_camera_pose():
         """ Pre-position the camera (optional) """
         glMatrixMode(GL_MODELVIEW)
         glLoadMatrixf(numpy.array([0.741, -0.365, 0.563, 0, 0, 0.839, 0.544,
@@ -32,31 +53,17 @@ class Spectator:
     def draw_simple_cube(self):
         """ Draw a simple object (optional) """
         try:
-            glEnableClientState(GL_VERTEX_ARRAY);
+            glEnableClientState(GL_VERTEX_ARRAY)
             glVertexPointerf(self.points)
-            glEnableClientState(GL_NORMAL_ARRAY);
+            glEnableClientState(GL_NORMAL_ARRAY)
             glNormalPointerf(self.normals)
             glDrawElementsui(GL_TRIANGLES, self.indices)
         except AttributeError:
             # a little hack to initialize points only once
-            self.points = numpy.array([2.4, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 2.4, 0, 0, \
-                                       2.4, 0, 2, 0, 0, 2, 0, -1.66, 0, 0, 0, 0, 0, -1.66, 0, 2.4, 0, 0, 0, 0, 0, \
-                                       2.4, 0, 0, 2.4, -1.66, 2, 2.4, 0, 2, 2.4, -1.66, 2, 0, 0, 2, 2.4, 0, 2, 0, \
-                                       -1.66, 0, 0, 0, 2, 0, -1.66, 2, 2.4, 0, 0, 0, -1.66, 0, 2.4, -1.66, 0, \
-                                       2.4, -1.66, 2, 2.4, 0, 0, 2.4, -1.66, 0, 0, 0, 2, 2.4, -1.66, 2, 0, \
-                                       -1.66, 2, 2.4, -1.66, 2, 0, -1.66, 0, 0, -1.66, 2, 0, -1.66, 0, 2.4,
-                                       -1.66, 2, 2.4, -1.66, 0], 'f').reshape(-1, 3)
 
-            self.normals = numpy.array([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, \
-                                        1, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, -1, 0, 0, -1, 1, 0, 0, 1, \
-                                        0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, \
-                                        -1, 0, 0, -1, 0, 0, -1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, \
-                                        0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0 \
-                                        ], 'f').reshape(-1, 3)
+            pass
 
-            self.indices = numpy.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, \
-                                        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, \
-                                        32, 33, 34, 35], 'i')
+    keys = []
 
     def loop(self):
         pygame.display.flip()
@@ -66,14 +73,14 @@ class Spectator:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         return True
 
-    def controls_3d(self, mouse_button=1, w_key='w', s_key='s', a_key='a', \
+    def controls_3d(self, mouse_button=1, w_key='w', s_key='s', a_key='a',
                     d_key='d'):
         """ The actual camera setting cycle """
         mouse_dx, mouse_dy = pygame.mouse.get_rel()
         if pygame.mouse.get_pressed()[mouse_button]:
             look_speed = .2
             buffer = glGetDoublev(GL_MODELVIEW_MATRIX)
-            c = (-1 * numpy.mat(buffer[:3, :3]) * \
+            c = (-1 * numpy.mat(buffer[:3, :3]) *
                  numpy.mat(buffer[3, :3]).T).reshape(3, 1)
             # c is camera center in absolute coordinates,
             # we need to move it back to (0,0,0)

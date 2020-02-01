@@ -1,9 +1,6 @@
-from core.class_scene_Gl import *
 import math as mt
 
-
-class glCube2():
-    pass
+from core.class_scene_Gl import *
 
 
 class TestGlScene(SceneThird):
@@ -82,12 +79,12 @@ class TestGlScene(SceneThird):
             self.rotate_right()
 
     def point_pos(self, cnt, r):
-        # type: (int, int) -> Scene
+        # type: (int, int) -> TestGlScene
         # points = [(self.width / 2 + r * mt.cos(a), self.height / 2 + r * mt.sin(a)) for a in [2 * mt.pi * i / cnt for i in range(cnt)]]
         points = [(r * mt.cos(a), r * mt.sin(a)) for a in [2 * mt.pi * i / cnt for i in range(cnt)]]
 
         glPointSize(7.0)
-        self.setpixels(points, self.getcolor(150, 0, 0))
+        self.setpixels(points, self.get_color(150, 0, 0))
         '''
         for pt in points:
             self.setpixel(pt[0], pt[1], self.getcolor(1.0, 0.0, 0.0))
@@ -101,7 +98,7 @@ class TestGlScene(SceneThird):
                 c_x2, c_y2 = self.get_xy_scene(pt2[0], pt2[1])
                 self.line(c_x1, c_y1, c_x2, c_y2, self.getcolor(0.0, 1.0, 0.0))
                 '''
-                self.line(pt1[0], pt1[1], pt2[0], pt2[1], self.getcolor(0, 150, 0))
+                self.line(pt1[0], pt1[1], pt2[0], pt2[1], self.get_color(0, 150, 0))
 
         return self
 
@@ -114,7 +111,7 @@ class TestGlScene(SceneThird):
         glEndList()
 
     def redraw(self):
-        # type: () -> Scene
+        # type: () -> TestGlScene
 
         glCallList(self.the_img)
 
@@ -131,16 +128,15 @@ class TestGlScene(SceneThird):
         glPopMatrix()
 
         glPushMatrix()
-        self.line(0, 0, self.cur_x - self.width / 2, self.cur_y - self.height / 2, self.getcolor(0, 0, 255))
+        self.line(0, 0, self.cur_x - self.width / 2, self.cur_y - self.height / 2, self.get_color(0, 0, 255))
         glPopMatrix()
 
         return super().redraw()
 
     def draw_obj(self):
-        # type: () -> Scene
+        # type: () -> TestGlScene
 
         lol = 45
-
 
         '''
         glPushMatrix()
@@ -166,7 +162,7 @@ class TestGlScene(SceneThird):
             c_x, c_y = self.get_xy_scene(x + self.width / 2, y + self.height / 2)
             self.line(0, 0, c_x, c_y, self.getcolor(255, 0, 0))
             '''
-            self.line(0, 0, x, y, self.getcolor(255, 128, 0))
+            self.line(0, 0, x, y, self.get_color(255, 128, 0))
 
         self.point_pos(lol, self.height / 2)
         glEnable(GL_LIGHTING)

@@ -1,7 +1,9 @@
 # coding=utf-8
 # Import a library of functions called 'pygame'
-import pygame
 import math
+
+import pygame
+
 from core.base_scene import BaseScene
 
 # Initialize the game engine
@@ -38,10 +40,10 @@ class Scene(BaseScene):
     # def _imagettftext
     # def _imagestring
 
-    def getpixel(self, x, y):
+    def get_pixel(self, x, y):
         return self._img.getPixel(x, y)
 
-    def getcolor(self, r, g, b):
+    def get_color(self, r, g, b):
         # type: (int, int, int) -> [int, int, int]
         return r, g, b
 
@@ -56,7 +58,7 @@ class Scene(BaseScene):
         # type: (int, int, int, int, [int, int, int]) -> Scene
         return self.line(x1, self.height - y1, x2, self.height - y2, color)
 
-    def polyLines(self, color, points):
+    def poly_lines(self, color, points):
         # type: (str, [int, int]) -> Scene
         pygame.draw.lines(self._img, color, self.closed, points)
 
@@ -70,7 +72,7 @@ class Scene(BaseScene):
         # type: (int, int, int, str) -> Scene
         if polylines:
             return self.arc(_cx, _cy, _r, _r, _color, 0, 360)
-        pygame.draw.arc(self._img, _color, [_cx - _r, _cy - _r, 2 * (_r), 2 * (_r)], 0, math.pi * 2)
+        pygame.draw.arc(self._img, _color, [_cx - _r, _cy - _r, 2 * _r, 2 * _r], 0, math.pi * 2)
         return self
 
     def clear(self):

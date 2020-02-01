@@ -10,16 +10,16 @@ imageObject = Image.open(faceName)
 
 # cropped     = imageObject.crop((100,30,400,300))
 image_path = "test_c_d.png"
-format = "PNG"
+fmt = "PNG"
 
 img = imageObject.convert("RGBA")
 datas = img.getdata()
 
 newData = []
 for item in datas:
-    new_item = (item[0]//16 * 16, item[1]//16 * 16, item[2]//16 * 16)
+    new_item = (item[0] // 16 * 16, item[1] // 16 * 16, item[2] // 16 * 16)
     newData.append(new_item)
 
 img.putdata(newData)
 
-img.save(image_path, format)
+img.save(image_path, fmt)

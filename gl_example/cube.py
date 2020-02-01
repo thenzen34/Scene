@@ -35,7 +35,7 @@ class Variables(object):
 variables = Variables()
 
 
-def drawBox():
+def draw_box():
     for i in range(6):
         glBegin(GL_QUADS)
         glNormal3fv(variables.n[i])
@@ -48,7 +48,7 @@ def drawBox():
 
 def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    drawBox()
+    draw_box()
     glutSwapBuffers()
 
 
@@ -96,5 +96,6 @@ def main():
     init()
     glutMainLoop()
     # return 0             ''' ANSI C requires main to return int. '''
+
 
 main()

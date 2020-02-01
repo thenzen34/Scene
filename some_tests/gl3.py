@@ -1,7 +1,8 @@
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
 import math as mt
+
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
 
 window = 0
 rtri = 0.0
@@ -9,8 +10,9 @@ rquad = 2.0
 speed = 0.1
 Wireframe = False
 
+
 def point_pos(p, r):
-    points = [(r*mt.cos(t), r*mt.sin(t)) for t in [2*mt.pi * i/p for i in range(p)]]
+    points = [(r * mt.cos(t), r * mt.sin(t)) for t in [2 * mt.pi * i / p for i in range(p)]]
 
     glPointSize(7.0)
     glBegin(GL_POINTS)
@@ -28,19 +30,19 @@ def point_pos(p, r):
             glVertex2f(*pt2)
     glEnd()
 
+
 def InitGL(Width, Height):
     glClearColor(0.3, 0.3, 0.3, 0.0)
     glClearDepth(1.0)
     glDepthFunc(GL_LESS)
     glEnable(GL_DEPTH_TEST)
 
-    if Wireframe == True:
+    if Wireframe:
         glPolygonMode(GL_FRONT, GL_LINE)
         glPolygonMode(GL_BACK, GL_LINE)
-    elif Wireframe == False:
+    elif not Wireframe:
         glPolygonMode(GL_FRONT, GL_FILL)
         glPolygonMode(GL_BACK, GL_FILL)
-
 
     glShadeModel(GL_SMOOTH)
     glMatrixMode(GL_PROJECTION)
@@ -144,14 +146,13 @@ def DrawGLScene():
 def keyPressed(*args):
     global rquad
 
-
     if args[0] == b"x":
         global Wireframe
-        if Wireframe == False:
+        if not Wireframe:
             glPolygonMode(GL_FRONT, GL_LINE)
             glPolygonMode(GL_BACK, GL_LINE)
             Wireframe = True
-        elif Wireframe == True:
+        elif Wireframe:
             glPolygonMode(GL_FRONT, GL_FILL)
             glPolygonMode(GL_BACK, GL_FILL)
             Wireframe = False
@@ -159,14 +160,14 @@ def keyPressed(*args):
             pass
     elif args[0] == b"\x1b":
         exit()
-    elif args[0] == b"v":\
-        rquad = 2
+    elif args[0] == b"v": \
+            rquad = 2
     print(rquad)
     print(args[0])
 
+
 def main():
     global window
-
 
     glutInit()
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
@@ -179,8 +180,8 @@ def main():
     glutKeyboardFunc(keyPressed)
     InitGL(640, 480)
 
-
-
     glutMainLoop()
     print("Press any key to exit")
+
+
 main()

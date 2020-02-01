@@ -1,8 +1,8 @@
 # http://qaru.site/questions/940278/finding-intersection-points-of-two-ellipses-python
 #
+import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry.polygon import LinearRing
-import matplotlib.pyplot as plt
 
 
 def ellipse_polyline(ellipses, n=100):
@@ -48,7 +48,7 @@ plt.plot(b[:, 0], b[:, 1])
 '''
 plt.show()
 
-#print(len(x))
+# print(len(x))
 
 
 '''

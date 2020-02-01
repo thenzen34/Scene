@@ -1,7 +1,7 @@
 #!/usr/bin/python
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
 from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
 
 name = "Hello, World"
 height = 400
@@ -91,13 +91,13 @@ gluLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0)
 glPushMatrix()
 
 # setup callbacks
-#glutSetDisplayFuncCallback()
+# glutSetDisplayFuncCallback()
 glutDisplayFunc(display)
-#glutSetMouseFuncCallback()
+# glutSetMouseFuncCallback()
 glutMouseFunc(mouse)
-#glutSetMotionFuncCallback()
+# glutSetMotionFuncCallback()
 glutMotionFunc(motion)
-#glutSetKeyboardFuncCallback()
+# glutSetKeyboardFuncCallback()
 glutKeyboardFunc(keyboard)
 
 glutMainLoop()

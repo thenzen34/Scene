@@ -2,7 +2,6 @@
 # import math
 
 # from core.class_scene import Scene
-from math import *
 
 # from core.class_scene_pygame import Scene
 
@@ -18,7 +17,7 @@ class SpiderScene(Scene):
 
     r = 100  # радиус туловища
 
-    l = 30  # растояние головы от центра х
+    length = 30  # растояние головы от центра х
     w = 20  # высота головы от туловища
 
     r1 = r
@@ -27,7 +26,7 @@ class SpiderScene(Scene):
     def __init__(self, width, height):
         super().__init__(width, height)
 
-        x = self.l  # ищем пересечении луча
+        x = self.length  # ищем пересечении луча
         y = 0
         # y = - sqrt(pow(r, 2) - pow(x, 2))  # находим точку
 
@@ -59,9 +58,10 @@ class SpiderScene(Scene):
         if len(result) > 0:
             # есть точка
             x, y = result
-            self._step(x, y).setpoint()._linestep(0, -self.w)._linestep(-2 * self.l, 0)._linestep(0, self.w).setpoint()
+            self._step(x, y).setpoint()._linestep(0, -self.w)._linestep(-2 * self.length, 0)._linestep(0,
+                                                                                                       self.w).setpoint()
 
-        self.setClosed(False) \
+        self.set_closed(False) \
             ._popstep() \
             ._step(0, -self.r2)._arc(self.r1, self.r2, 180, 180)._step(0, self.r1)._arc(self.r2, self.r1, 180,
                                                                                         180)._popstep() \

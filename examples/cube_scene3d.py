@@ -39,7 +39,7 @@ class Cube(Scene3d):
         self.Points[7].z = 1
 
         for i in range(self.Size):
-            self.DrawPoint[i].GetCoords2D(self.Points[i])
+            self.DrawPoint[i].get_coords_2D(self.Points[i])
 
         return super(Cube, self).initialize()
 
@@ -63,8 +63,8 @@ class Cube(Scene3d):
 
         for i in range(self.Size):
             # self.DrawPoint[i].clear()
-            self.Points[i].Rotate3D()
-            self.DrawPoint[i].GetCoords2D(self.Points[i])
+            self.Points[i].rotate_3D()
+            self.DrawPoint[i].get_coords_2D(self.Points[i])
             # self.DrawPoint[i].draw()
 
         self.line(self.DrawPoint[0].x, self.DrawPoint[0].y, self.DrawPoint[1].x, self.DrawPoint[1].y, self.color)

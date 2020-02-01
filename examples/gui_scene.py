@@ -1,4 +1,3 @@
-import math
 from core.class_scene_Gl import *
 
 
@@ -72,7 +71,7 @@ class Button:
         # type: (GuiTestGlScene) -> Button
 
         glPushMatrix()
-        scene.rectangle(self.start.x, self.start.y, self.end.x, self.end.y, scene.getcolor(0, 255, 0))
+        scene.rectangle(self.start.x, self.start.y, self.end.x, self.end.y, scene.get_color(0, 255, 0))
         glPopMatrix()
 
         return self
@@ -87,7 +86,7 @@ class GraphTPoint(TPoint):
     def draw(self, scene):
         # type: (GuiTestGlScene) -> GraphTPoint
         glPushMatrix()
-        scene.circle(self.x, self.y, 10, scene.getcolor(255, 0, 0))
+        scene.circle(self.x, self.y, 10, scene.get_color(255, 0, 0))
         glPopMatrix()
 
         return self
@@ -183,7 +182,7 @@ class GuiTestGlScene(SceneThird):
                 self.points.append(
                     GraphTPoint(100 + -self.width / 2 + x * 50,
                                 100 + -self.height / 2 + y * 50,
-                                self.getcolor(255, 0, 0)))
+                                self.get_color(255, 0, 0)))
             '''
             self.points.append(
                 GraphTPoint(random.randint(-self.width/2, self.width/2), random.randint(-self.height/2, self.height/2),
@@ -223,7 +222,7 @@ class GuiTestGlScene(SceneThird):
     the_img = None
 
     def redraw(self):
-        # type: () -> Scene
+        # type: () -> GuiTestGlScene
 
         glCallList(self.the_img)
 

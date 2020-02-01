@@ -15,4 +15,3 @@ for item in datas:
 
 # SA60LCD
 print(len(newData), ", ".join(newData))
-

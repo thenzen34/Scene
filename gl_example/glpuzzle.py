@@ -2,8 +2,8 @@
 import random
 
 from OpenGL.GL import *
-from OpenGL.GLUT import *
 from OpenGL.GLU import *
+from OpenGL.GLUT import *
 
 
 class Variables(object):
@@ -107,7 +107,7 @@ def random():
     return random.random() >> 2
 
 
-def hash(config):
+def calc_hash(config):
     value = 0
     for i in range(HEIGHT):
         for j in range(WIDTH):
@@ -369,7 +369,7 @@ def drawAll():
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
     glTranslatef(0, 0, -10)
-    glMultMatrixf( (m[0][0])) # &
+    glMultMatrixf((m[0][0]))  # &
     glRotatef(180, 0, 0, 1)
 
     if depth:
@@ -428,11 +428,11 @@ def addConfig(config, back):
     """
     :type back: puzzle
     """
-    hashvalue = hash(config)
+    hashvalue = calc_hash(config)
 
     newpiece = hashtable[hashvalue % HASHSIZE]
     goto_nomatch = False
-    while newpiece != None:
+    while newpiece is not None:
         if newpiece.hashvalue == hashvalue:
 
             for i in range(WIDTH):
@@ -466,7 +466,7 @@ def addConfig(config, back):
         puzzles = newlistentry
     lastentry = newlistentry
 
-    if back == None:
+    if back is None:
         startPuzzle = newpiece
     if solution(config):
         solidifyChain(newpiece)

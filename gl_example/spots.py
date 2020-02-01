@@ -40,11 +40,10 @@
  * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
  '''
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GLUT import *
-
 from math import sin, pi
+
+from OpenGL.GL import *
+from OpenGL.GLUT import *
 
 TWO_PI = 2 * pi
 

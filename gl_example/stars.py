@@ -40,13 +40,13 @@
  * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
  '''
 
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
-from math import *
-from time import *
-from random import uniform, seed
 from enum import Enum
+from math import *
+from random import uniform, seed
+
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
 
 
 def rand():
@@ -155,7 +155,7 @@ def StarPoint(n):
     x0 += variables.windW / 2.0
     y0 += variables.windH / 2.0
 
-    if x0 >= 0.0 and x0 < variables.windW and y0 >= 0.0 and y0 < variables.windH:
+    if 0.0 <= x0 < variables.windW and y0 >= 0.0 and y0 < variables.windH:
         return GL_TRUE
     else:
         return GL_FALSE
@@ -168,7 +168,7 @@ def ShowStar(n):
     x0 += variables.windW / 2.0
     y0 += variables.windH / 2.0
 
-    if x0 >= 0.0 and x0 < variables.windW and y0 >= 0.0 and y0 < variables.windH:
+    if 0.0 <= x0 < variables.windW and 0.0 <= y0 < variables.windH:
         if variables.stars[n].type == StarsType.STREAK:
             x1 = variables.stars[n].x[1] * variables.windW / variables.stars[n].z[1]
             y1 = variables.stars[n].y[1] * variables.windH / variables.stars[n].z[1]
@@ -244,6 +244,8 @@ def Reshape(width, height):
 
 
 ''' ARGSUSED1 '''
+
+
 def Key(key, x, y):
     if key == ' ':
         variables.flag = StarsSpeed.WEIRD if variables.flag == StarsSpeed.NORMAL else StarsSpeed.NORMAL
@@ -302,9 +304,9 @@ def main():
     glutInit(sys.argv)
     Args(sys.argv)
 
-    type = GLUT_RGB
-    type |= GLUT_DOUBLE if variables.doubleBuffer else GLUT_SINGLE
-    glutInitDisplayMode(type)
+    color_type = GLUT_RGB
+    color_type |= GLUT_DOUBLE if variables.doubleBuffer else GLUT_SINGLE
+    glutInitDisplayMode(color_type)
     glutCreateWindow("Stars")
 
     Init()

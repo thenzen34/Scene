@@ -2,7 +2,7 @@ from core.class_scene_svg import *
 
 
 class TestSize(Scene):
-    def draw(self):
+    def draw(self, name=None):
         self.redraw()
         name = 'svg_test_scene.svg'  # time.strftime("%Y%m%d-%H%M%S.svg")
         self._img.saveas(filename=name)

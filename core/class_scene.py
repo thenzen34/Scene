@@ -20,15 +20,15 @@ class Scene(BaseScene):
     # def _imagettftext
     # def _imagestring
 
-    def setChar(self, x, y, c, size):
+    def set_char(self, x, y, c, size):
         t = gr.Text(gr.Point((x + 0.5) * size, (y + 0.5) * size), c)
         t.setFill(self._color)
         t.draw(self._img)
 
-    def getpixel(self, x, y):
+    def get_pixel(self, x, y):
         return self._img.getPixel(x, y)
 
-    def getcolor(self, r, g, b):
+    def get_color(self, r, g, b):
         # type: (int, int, int) -> str
         return color_rgb(r, g, b)
 
@@ -45,15 +45,15 @@ class Scene(BaseScene):
         # type: (int, int, int, int, str) -> Scene
         return self.line(x1, self.height - y1, x2, self.height - y2, color)
 
-    def polyLines(self, color, points):
+    def poly_lines(self, color, points):
         # type: (str, [[2]]) -> Scene
         first = points.pop(0)
 
         last = first
 
-        for next in points:
-            self.line(last[0], last[1], next[0], next[1], color)
-            last = next
+        for next_point in points:
+            self.line(last[0], last[1], next_point[0], next_point[1], color)
+            last = next_point
 
         if self.closed:
             self.line(last[0], last[1], first[0], first[1], color)

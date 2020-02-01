@@ -1,7 +1,8 @@
 # coding=utf-8
 
-from core.class_scene_Gl import *
 from math import *
+
+from core.class_scene_Gl import *
 
 
 class PiTree1Scene(Scene2d):

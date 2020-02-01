@@ -1,16 +1,16 @@
 # coding=utf-8
 # from class_scene import Scene
 import random
-
-from .class_scene_pygame import Scene
 from math import *
+
+from core.class_scene_pygame import Scene
 
 
 class TCoords3d(object):
     x = y = z = 0
     scene = None  # type: Scene3d
 
-    def Rotate3D(self):
+    def rotate_3D(self):
         xa = self.scene.xa
         ya = self.scene.ya
         za = self.scene.za
@@ -65,18 +65,18 @@ class TCoords2d(object):
     x = y = 0
     scene = None  # type: Scene3d
 
-    def GetCoords2D(self, Coords3D):
-        ZNorm = 1 - (Coords3D.z + self.scene.SCZ) / self.scene.CamZ
+    def get_coords_2D(self, coords_3D):
+        ZNorm = 1 - (coords_3D.z + self.scene.SCZ) / self.scene.CamZ
         if ZNorm != 0:
-            self.x = round(((Coords3D.x + self.scene.SCX) / ZNorm * self.scene.CoefX) + self.scene.ScrX)
-            self.y = round(((Coords3D.y + self.scene.SCY) / ZNorm * self.scene.CoefY) + self.scene.ScrY)
+            self.x = round(((coords_3D.x + self.scene.SCX) / ZNorm * self.scene.CoefX) + self.scene.ScrX)
+            self.y = round(((coords_3D.y + self.scene.SCY) / ZNorm * self.scene.CoefY) + self.scene.ScrY)
 
     def clear(self):
-        if self.x <= self.scene.width and self.x >= 0 and self.y <= self.scene.height and self.y >= 0:
+        if 0 <= self.x <= self.scene.width >= self.y >= 0:
             self.scene.setpixel(self.x, self.y, self.scene.BACKGROUND)
 
     def draw(self):
-        if self.x <= self.scene.width and self.x >= 0 and self.y <= self.scene.height and self.y >= 0:
+        if 0 <= self.x <= self.scene.width >= self.y >= 0:
             self.scene.setpixel(self.x, self.y, self.scene.color)
 
     def __init__(self, scene):
@@ -111,8 +111,8 @@ class Scene3d(Scene):
     def __init__(self, width, height):
         super(Scene3d, self).__init__(width, height)
 
-        self.BACKGROUND = self.getcolor(0, 0, 0)
-        self.color = self.getcolor(0, 200, 0)
+        self.BACKGROUND = self.get_color(0, 0, 0)
+        self.color = self.get_color(0, 200, 0)
         random.seed()
 
         self.Points = [TCoords3d(self) for _ in range(self.Size)]
@@ -130,8 +130,8 @@ class Scene3d(Scene):
     def drawing(self):  # type: () -> Scene3d
         for i in range(self.Size):
             self.DrawPoint[i].clear()
-            self.Points[i].Rotate3D()
-            self.DrawPoint[i].GetCoords2D(self.Points[i])
+            self.Points[i].rotate_3D()
+            self.DrawPoint[i].get_coords_2D(self.Points[i])
             self.DrawPoint[i].draw()
         return self
 
