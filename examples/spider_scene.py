@@ -9,9 +9,9 @@ from math import *
 
 from core.class_scene_svg import Scene
 
-#todo ellipce to array point save as params and point intersect
-class SpiderScene(Scene):
 
+# todo ellipce to array point save as params and point intersect
+class SpiderScene(Scene):
     point_ellipse1_circle = []
     point_ellipse2_circle = []
     point_line_circle = []
@@ -36,9 +36,12 @@ class SpiderScene(Scene):
         x2 = x
         y2 = - self.r
 
-        self.point_ellipse1_circle = self.calc_intersection_ellipse_ellipse([0, 0, self.r, self.r, 0, 0, 90], [0, self.r2, self.r1, self.r2, 0, 0, 90])
-        self.point_ellipse2_circle = self.calc_intersection_ellipse_ellipse([0, 0, self.r, self.r, 0, 0, 90], [0, self.r1, self.r2, self.r1, 0, 0, 90])
-        self.point_line_circle = self.calc_intersection_ellipse_line([0, 0, self.r, self.r, 0, 0, 360], [x1, y1, x2, y2])
+        self.point_ellipse1_circle = self.calc_intersection_ellipse_ellipse([0, 0, self.r, self.r, 0, 0, 90],
+                                                                            [0, self.r2, self.r1, self.r2, 0, 0, 90])
+        self.point_ellipse2_circle = self.calc_intersection_ellipse_ellipse([0, 0, self.r, self.r, 0, 0, 90],
+                                                                            [0, self.r1, self.r2, self.r1, 0, 0, 90])
+        self.point_line_circle = self.calc_intersection_ellipse_line([0, 0, self.r, self.r, 0, 0, 360],
+                                                                     [x1, y1, x2, y2])
 
     def setpoint(self):
         return self._pushcolor()._stepcolor(0, 255, 0)._circle(2)._popcolor()
@@ -60,9 +63,11 @@ class SpiderScene(Scene):
 
         self.setClosed(False) \
             ._popstep() \
-            ._step(0, -self.r2)._arc(self.r1, self.r2, 180, 180)._step(0, self.r1)._arc(self.r2, self.r1, 180, 180)._popstep() \
+            ._step(0, -self.r2)._arc(self.r1, self.r2, 180, 180)._step(0, self.r1)._arc(self.r2, self.r1, 180,
+                                                                                        180)._popstep() \
             ._popstep() \
-            ._step(0, self.r2)._arc(self.r1, self.r2, 0, 180)._step(0, -self.r1)._arc(self.r2, self.r1, 0, 180)._popstep()
+            ._step(0, self.r2)._arc(self.r1, self.r2, 0, 180)._step(0, -self.r1)._arc(self.r2, self.r1, 0,
+                                                                                      180)._popstep()
         # ._arcstep(r1, r2, direction)
 
         result = self.point_ellipse1_circle

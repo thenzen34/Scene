@@ -20,6 +20,11 @@ class Scene(BaseScene):
     # def _imagettftext
     # def _imagestring
 
+    def setChar(self, x, y, c, size):
+        t = gr.Text(gr.Point((x + 0.5) * size, (y + 0.5) * size), c)
+        t.setFill(self._color)
+        t.draw(self._img)
+
     def getpixel(self, x, y):
         return self._img.getPixel(x, y)
 

@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+i = 3
+buf = "%d moves to complete!" % i
+
+print(buf)
+
+quit()
 
 
 import class_test_use

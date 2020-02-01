@@ -1,4 +1,6 @@
 # Импортируем все необходимые библиотеки:
+import math
+
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -8,7 +10,18 @@ from core.base_scene import BaseScene
 
 
 class Scene(BaseScene):
+    def center(self):
+        # type: () -> Scene
+        return self \
+            ._moveto(0, 0)
+
     window = 0
+
+    def project_init(self):
+        gluPerspective(45, float(self.width) / float(self.height), 0.1, 100.0)
+
+    def gl_idle(self):
+        glutPostRedisplay()
 
     def __init__(self, width, height):
         # Здесь начинается выполнение программы
@@ -21,11 +34,12 @@ class Scene(BaseScene):
         glutInitWindowPosition(0, 0)
         self.window = glutCreateWindow(b"")
         glutDisplayFunc(self.gl_draw)
-        glutIdleFunc(self.gl_draw)
+        glutIdleFunc(self.gl_idle)
         glutReshapeFunc(self.gl_resize_scene)
         glutKeyboardFunc(self.gl_key_pressed)
         glutMouseFunc(self.gl_mouse_handle)
         glutMotionFunc(self.gl_mouse_motion)
+        glutPassiveMotionFunc(self.gl_mouse_motion_passive)
         glutMouseWheelFunc(self.gl_mouse_wheel)
 
         glClearColor(0.3, 0.3, 0.3, 0.0)
@@ -36,7 +50,7 @@ class Scene(BaseScene):
         glShadeModel(GL_SMOOTH)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
+        self.project_init()
         glMatrixMode(GL_MODELVIEW)
 
         self.init()
@@ -115,6 +129,14 @@ class Scene(BaseScene):
     def on_mouse_left_up(self, x, y):
         self.print('callback on_mouse_left_up in point (%d, %d)' % (x, y))
         self.left_button_down = False
+        lx, ly = self.start_click
+        dx = 5
+        length = math.sqrt(math.pow(lx - x, 2) + math.pow(ly - y, 2))
+        if length < dx:
+            self.on_mouse_click()
+
+    def on_mouse_click(self):
+        self.print('callback on_mouse_click')
 
     def on_mouse_wheel_up(self, x, y):
         self.print('callback on_mouse_wheel_up in point (%d, %d)' % (x, y))
@@ -123,6 +145,10 @@ class Scene(BaseScene):
     def on_mouse_wheel_down(self, x, y):
         self.print('callback on_mouse_wheel_down in point (%d, %d)' % (x, y))
         glScaled(0.9, 0.9, 0.9)
+
+    def gl_mouse_motion_passive(self, x, y):
+        self.print('callback gl_mouse_motion_passive in point (%d, %d)' % (x, y))
+        return
 
     def gl_mouse_motion(self, x, y):
         self.print('callback gl_mouse_motion in point (%d, %d)' % (x, y))
@@ -228,7 +254,7 @@ class Scene(BaseScene):
 
     def getcolor(self, r, g, b):
         # type: (int, int, int) -> Tuple[int, int, int, int]
-        return r, g, b, 1
+        return r / 255, g / 255, b / 255, 1
 
     def line(self, x1, y1, x2, y2, color):
         # type: (int, int, int, int, str) -> Scene
@@ -288,7 +314,7 @@ class Scene(BaseScene):
         return self
 
     def setpixels(self, points, _color):
-        # type: (int, [], str) -> Scene
+        # type: ([], str) -> Scene
         glBegin(GL_POINTS)
         glColor3d(*_color)
         for pt in points:
@@ -296,6 +322,200 @@ class Scene(BaseScene):
         glEnd()
 
         return self
+
+
+class SceneThird(Scene):
+    xRot = 0.0
+    yRot = 0.0
+    zRot = 0.0
+    xTra = 0.0
+    yTra = 0.0
+    zTra = 0.0
+    nSca = 1.0
+
+    is_projection_ortho = True
+
+    def lines(self):
+        # type: () -> Scene
+        """
+        рисуем линии координат
+        :return:
+        """
+
+        cx = self.width / 2  # центр по х
+        cy = self.height / 2  # центр по у
+        self \
+            ._setcolor(0, 128, 128) \
+            ._moveto(0, -cy)._linestep(0, self.height)._moveto(-cx, 0)._linestep(self.width, 0)
+        return self
+
+    def line(self, x1, y1, x2, y2, color):
+        # type: (int, int, int, int, str) -> Scene
+        glBegin(GL_LINES)
+        glColor3d(*color)
+        c_x, c_y = self.get_xy_scene(x1 + self.width / 2, y1 + self.height / 2)
+        glVertex2f(c_x, c_y)
+        c_x, c_y = self.get_xy_scene(x2 + self.width / 2, y2 + self.height / 2)
+        glVertex2f(c_x, c_y)
+        glEnd()
+
+        return self
+
+    def setpixel(self, _x, _y, _color):
+        # type: (int, int, str) -> Scene
+        glBegin(GL_POINTS)
+        glColor3d(*_color)
+        c_x, c_y = self.get_xy_scene(_x + self.width / 2, _y + self.height / 2)
+        glVertex2f(c_x, c_y)
+        glEnd()
+
+        return self
+
+    def setpixels(self, points, _color):
+        # type: ([], str) -> Scene
+        glBegin(GL_POINTS)
+        glColor3d(*_color)
+        for pt in points:
+            c_x, c_y = self.get_xy_scene(pt[0] + self.width / 2, pt[1] + self.height / 2)
+            glVertex2f(c_x, c_y)
+        glEnd()
+
+        return self
+
+    def get_xy_scene(self, x, y):
+        c_x = (((x + 1) / self.width) * 2 - 1) * self.width / self.height - self.xTra * self.nSca
+        c_y = 1 - ((y + 1) / self.height) * 2 - self.zTra * self.nSca
+        return c_x, c_y
+
+    def project_init(self):
+        if self.is_projection_ortho:
+            ratio = self.height / self.width
+
+            if self.width >= self.height:
+                glOrtho(-1.0 / ratio, 1.0 / ratio, -1.0, 1.0, -10.0, 1.0)
+            else:
+                glOrtho(-1.0, 1.0, -1.0 * ratio, 1.0 * ratio, -10.0, 1.0)
+        else:
+            gluPerspective(90, float(self.width) / float(self.height), 1, 100.0)
+
+    def resize_scene(self, dw, dh):
+        pass
+
+    def gl_resize_scene(self, width, height):
+        if height == 0:
+            height = 1
+
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        if self.is_projection_ortho:
+            ratio = height / width
+
+            if width >= height:
+                glOrtho(-1.0 / ratio, 1.0 / ratio, -1.0, 1.0, -10.0, 1.0)
+            else:
+                glOrtho(-1.0, 1.0, -1.0 * ratio, 1.0 * ratio, -10.0, 1.0)
+        else:
+            gluPerspective(60, float(width) / float(height), 1, 100.0)
+
+        glViewport(0, 0, width, height)
+        self.resize_scene(width / self.width, height / self.height)
+        self.width = width
+        self.height = height
+        glMatrixMode(GL_MODELVIEW)
+
+    def scale_plus(self):
+        self.nSca = self.nSca * 1.1
+
+    def scale_minus(self):
+        self.nSca = self.nSca / 1.1
+
+    def rotate_up(self):
+        self.xRot += 1.0
+
+    def rotate_down(self):
+        self.xRot -= 1.0
+
+    def rotate_left(self):
+        self.zRot += 1.0
+
+    def rotate_right(self):
+        self.zRot -= 1.0
+
+    def translate_down(self):
+        self.zTra -= 0.05
+
+    def translate_up(self):
+        self.zTra += 0.05
+
+    def defaultScene(self):
+        self.xRot = 0
+        self.yRot = 0
+        self.zRot = 0
+        self.zTra = 0
+        self.nSca = 1
+
+    def gl_key_pressed(self, *args):
+        self.print(args)
+        pass
+
+    def clear(self):
+        # type: () -> Scene
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+
+        glScalef(self.nSca, self.nSca, self.nSca)
+        glTranslatef(0, self.zTra, 0.0)
+        glRotatef(self.xRot, 1.0, 0.0, 0.0)
+        glRotatef(self.yRot, 0.0, 1.0, 0.0)
+        glRotatef(self.zRot, 0.0, 0.0, 1.0)
+
+        return self
+
+    def on_mouse_wheel_up(self, x, y):
+        self.print('callback on_mouse_wheel_up in point (%d, %d)' % (x, y))
+        self.scale_plus()
+
+    def on_mouse_wheel_down(self, x, y):
+        self.print('callback on_mouse_wheel_down in point (%d, %d)' % (x, y))
+        self.scale_minus()
+
+
+class Scene2d(SceneThird):
+    ddx = 0
+    ddy = 0
+
+    last_ddx_ddy = 0, 0
+
+    def clear(self):
+        super().clear()
+        glTranslatef(self.ddx, self.ddy, 0.0)
+        return self
+
+    def on_mouse_left_down(self, x, y):
+        super().on_mouse_left_down(x, y)
+        self.last_ddx_ddy = self.ddx, self.ddy
+        glutSetCursor(GLUT_CURSOR_INFO)
+
+    def on_mouse_left_up(self, x, y):
+        super().on_mouse_left_up(x, y)
+        glutSetCursor(GLUT_CURSOR_RIGHT_ARROW)
+
+    def gl_mouse_motion(self, x, y):
+        self.print('callback gl_mouse_motion in point (%d, %d)' % (x, y))
+
+        if self.left_button_down:
+            dx, dy = self.get_xy_scene(x - self.start_click[0] + self.width / 2, -y + self.start_click[1] + self.height / 2)
+            # self.ddx, self.zTra = dx, -dy
+            self.ddx = self.last_ddx_ddy[0] + dx / self.nSca
+            self.ddy = self.last_ddx_ddy[1] - dy / self.nSca
+            # glTranslatef((), 0.0, 0.0)
+
+    def gl_key_pressed(self, *args):
+        super().gl_key_pressed(*args)
+        if args[0] == b"\x1b":
+            glutLeaveMainLoop()
+            exit()
 
 
 class SceneSecond(Scene):

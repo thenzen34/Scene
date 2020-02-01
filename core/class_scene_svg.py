@@ -110,8 +110,9 @@ class Scene(BaseScene):
     def redraw(self):
         pass
 
-    def draw(self):
+    def draw(self, name=None):
         self.redraw()
-        name = time.strftime("%Y%m%d-%H%M%S.svg")
+        if name is None:
+            name = time.strftime("%Y%m%d-%H%M%S.svg")
         self._img.saveas(filename=name)
         return name

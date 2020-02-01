@@ -1,5 +1,6 @@
 from core.class_scene_Gl import *
 
+
 class Quads:
     x1 = y1 = z1 = 0
     x2 = y2 = z2 = 0
@@ -15,7 +16,7 @@ class GridGlScene(SceneSecond):
 
     Q = [Quads() for x in range(100)]
 
-    def addQuads(self):
+    def add_quads(self):
         self.Q[0].state += 1
         if self.Q[0].state > 4:
             self.Q[0].state = 1
@@ -40,7 +41,7 @@ class GridGlScene(SceneSecond):
             self.Q[self.cn].y4 = self.cy
             self.Q[self.cn].z4 = self.cz
 
-    def drawQuads(self):
+    def draw_quads(self):
         for i in range(self.Q[0].total + 1):
             glPushMatrix()
             glBegin(GL_QUADS)
@@ -52,14 +53,14 @@ class GridGlScene(SceneSecond):
             glEnd()
             glPopMatrix()
 
-    def theCube(self):
+    def the_cube(self):
         glPushMatrix()
         glColor3f(1, 1, 1)
         glTranslatef(self.cx, self.cy, self.cz)
         glutSolidCube(0.4)
         glPopMatrix()
 
-    def drawGrid(self):
+    def draw_grid(self):
         for i in range(40):
             glPushMatrix()
             if i < 20:
@@ -116,7 +117,7 @@ class GridGlScene(SceneSecond):
         elif key == b'z':
             self.cy += 1
         elif key == b'\x20':
-            self.addQuads()
+            self.add_quads()
         elif key == b'r':
             self.Q[self.cn].r = 1
             self.Q[self.cn].g = 0
@@ -139,9 +140,9 @@ class GridGlScene(SceneSecond):
     def redraw(self):
         # type: () -> Scene
 
-        self.drawGrid()
-        self.drawQuads()
-        self.theCube()
+        self.draw_grid()
+        self.draw_quads()
+        self.the_cube()
 
         return self
 

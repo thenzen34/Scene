@@ -160,6 +160,9 @@ class BaseScene(object):
     def polyLines(self, color, points):
         return self
 
+    def rectangle(self, x1, y1, x2, y2, color):
+        return self.polyLines(color, [[x1, y1], [x1, y2], [x2, y2], [x2, y1]])
+
     def ovalspin(self, _cx, _cy, _r1, _r2, u, _color):
         return self
 
@@ -265,7 +268,7 @@ class BaseScene(object):
     # def fillrectangle
 
     def _moveto(self, x, y):
-        # type: (int, int) -> BaseScene
+        # type: (float, float) -> BaseScene
         self._x = x
         self._y = y
         return self
@@ -276,25 +279,25 @@ class BaseScene(object):
         return self
 
     def _lineto(self, x, y):
-        # type: (int, int) -> BaseScene
+        # type: (float, float) -> BaseScene
         return self \
             .line(self._x, self._y, x, y, self._color) \
             ._moveto(x, y)
 
     def _lineto2(self, x, y):
-        # type: (int, int) -> BaseScene
+        # type: (float, float) -> BaseScene
         return self \
             .line(self._x, self.height - self._y, x, self.height - y, self._color) \
             ._moveto(x, y)
 
     def _linestep(self, x, y):
-        # type: (int, int) -> BaseScene
+        # type: (float, float) -> BaseScene
         return self \
             .line(self._x, self._y, self._x + x, self._y + y, self._color) \
             ._moveto(self._x + x, self._y + y)
 
     def _lineANDstep(self, x, y):
-        # type: (int, int) -> BaseScene
+        # type: (float, float) -> BaseScene
         return self \
             .line(self._x, self._y, self._x + x, self._y + y, self._color) \
             ._step(x, y)

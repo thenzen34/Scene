@@ -6,6 +6,7 @@ import pygame
 
 calc_int = False
 
+
 class StarsScene(Scene):
     betta = 0
 
@@ -53,8 +54,6 @@ class StarsScene(Scene):
                     place = text.get_rect(center=(self.width / 2, self.height - 72))
                     self.text(text, place)
 
-
-
             self.ovalspin(cx, cy, r1, r2, u, color)
             for iy in range(cnt2):
                 x, y = self.getacrpoint(r1, r2, iy * alfa2, u)
@@ -83,4 +82,4 @@ t.draw()
 		return self
 '''
 
-#140 - 150
+# 140 - 150
