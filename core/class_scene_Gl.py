@@ -121,6 +121,7 @@ class Scene(BaseScene):
 
     left_button_down = False
     middle_button_down = False
+    right_button_down = False
 
     def on_mouse_left_down(self, x, y):
         self.print('callback on_mouse_left_down in point (%d, %d)' % (x, y))
@@ -171,9 +172,11 @@ class Scene(BaseScene):
 
     def on_mouse_right_up(self, x, y):
         self.print('callback on_mouse_right_up in point (%d, %d)' % (x, y))
+        self.right_button_down = False
 
     def on_mouse_right_down(self, x, y):
         self.print('callback on_mouse_right_down in point (%d, %d)' % (x, y))
+        self.right_button_down = True
 
     def on_mouse_middle_up(self, x, y):
         self.print('callback on_mouse_middle_up in point (%d, %d)' % (x, y))
@@ -507,23 +510,23 @@ class Scene2d(SceneThird):
         glTranslatef(self.ddx, self.ddy, 0.0)
         return self
 
-    middle_click = 0, 0
-    def on_mouse_middle_down(self, x, y):
-        super().on_mouse_middle_down(x, y)
-        self.middle_click = x, y
+    right_click = 0, 0
+    def on_mouse_right_down(self, x, y):
+        super().on_mouse_right_down(x, y)
+        self.right_click = x, y
         self.last_ddx_ddy = self.ddx, self.ddy
         glutSetCursor(GLUT_CURSOR_INFO)
 
-    def on_mouse_middle_up(self, x, y):
-        super().on_mouse_middle_up(x, y)
+    def on_mouse_right_up(self, x, y):
+        super().on_mouse_right_up(x, y)
         glutSetCursor(GLUT_CURSOR_RIGHT_ARROW)
 
     def gl_mouse_motion(self, x, y):
         self.print('callback gl_mouse_motion in point (%d, %d)' % (x, y))
 
-        if self.middle_button_down:
-            dx, dy = self.get_xy_scene(x - self.middle_click[0] + self.width / 2,
-                                       -y + self.middle_click[1] + self.height / 2)
+        if self.right_button_down:
+            dx, dy = self.get_xy_scene(x - self.right_click[0] + self.width / 2,
+                                       -y + self.right_click[1] + self.height / 2)
             # защита от дребезга руки
             if math.sqrt(math.pow(dx, 2) + math.pow(dy, 2)) > 0.05:
                 self.ddx = self.last_ddx_ddy[0] + dx / self.nSca
