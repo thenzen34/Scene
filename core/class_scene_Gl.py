@@ -120,6 +120,7 @@ class Scene(BaseScene):
     args_list = []
 
     left_button_down = False
+    middle_button_down = False
 
     def on_mouse_left_down(self, x, y):
         self.print('callback on_mouse_left_down in point (%d, %d)' % (x, y))
@@ -133,10 +134,10 @@ class Scene(BaseScene):
         dx = 5
         length = math.sqrt(math.pow(lx - x, 2) + math.pow(ly - y, 2))
         if length < dx:
-            self.on_mouse_click()
+            self.on_mouse_click(x, y)
 
-    def on_mouse_click(self):
-        self.print('callback on_mouse_click')
+    def on_mouse_click(self, x, y):
+        self.print('callback on_mouse_click in point (%d, %d)' % (x, y))
 
     def on_mouse_wheel_up(self, x, y):
         self.print('callback on_mouse_wheel_up in point (%d, %d)' % (x, y))
@@ -176,9 +177,11 @@ class Scene(BaseScene):
 
     def on_mouse_middle_up(self, x, y):
         self.print('callback on_mouse_middle_up in point (%d, %d)' % (x, y))
+        self.middle_button_down = False
 
     def on_mouse_middle_down(self, x, y):
         self.print('callback on_mouse_middle_down in point (%d, %d)' % (x, y))
+        self.middle_button_down = True
 
     def gl_key_pressed(self, *args):
         print(args)
@@ -382,10 +385,17 @@ class SceneThird(Scene):
 
         return self
 
+    # получаем гльным координаты по координатам растровой сцены
     def get_xy_scene(self, x, y):
         c_x = (((x + 1) / self.width) * 2 - 1) * self.width / self.height - self.xTra * self.nSca
         c_y = 1 - ((y + 1) / self.height) * 2 - self.zTra * self.nSca
         return c_x, c_y
+
+    # получаем координаты растровой сцены по гльным координатам
+    def get_scene_xy(self, c_x, c_y):
+        x = (self.height * (self.xTra * self.nSca + c_x) / self.width + 1) / 2 * self.width - 1
+        y = - (self.height * ((self.zTra * self.nSca + c_y - 1) / 2) + 1)
+        return x, y
 
     def project_init(self):
         if self.is_projection_ortho:
@@ -418,9 +428,10 @@ class SceneThird(Scene):
             gluPerspective(60, float(width) / float(height), 1, 100.0)
 
         glViewport(0, 0, width, height)
-        self.resize_scene(width / self.width, height / self.height)
+        tmp = width / self.width, height / self.height
         self.width = width
         self.height = height
+        self.resize_scene(*tmp)
         glMatrixMode(GL_MODELVIEW)
 
     def scale_plus(self):
@@ -496,23 +507,27 @@ class Scene2d(SceneThird):
         glTranslatef(self.ddx, self.ddy, 0.0)
         return self
 
-    def on_mouse_left_down(self, x, y):
-        super().on_mouse_left_down(x, y)
+    middle_click = 0, 0
+    def on_mouse_middle_down(self, x, y):
+        super().on_mouse_middle_down(x, y)
+        self.middle_click = x, y
         self.last_ddx_ddy = self.ddx, self.ddy
         glutSetCursor(GLUT_CURSOR_INFO)
 
-    def on_mouse_left_up(self, x, y):
-        super().on_mouse_left_up(x, y)
+    def on_mouse_middle_up(self, x, y):
+        super().on_mouse_middle_up(x, y)
         glutSetCursor(GLUT_CURSOR_RIGHT_ARROW)
 
     def gl_mouse_motion(self, x, y):
         self.print('callback gl_mouse_motion in point (%d, %d)' % (x, y))
 
-        if self.left_button_down:
-            dx, dy = self.get_xy_scene(x - self.start_click[0] + self.width / 2,
-                                       -y + self.start_click[1] + self.height / 2)
-            self.ddx = self.last_ddx_ddy[0] + dx / self.nSca
-            self.ddy = self.last_ddx_ddy[1] - dy / self.nSca
+        if self.middle_button_down:
+            dx, dy = self.get_xy_scene(x - self.middle_click[0] + self.width / 2,
+                                       -y + self.middle_click[1] + self.height / 2)
+            # защита от дребезга руки
+            if math.sqrt(math.pow(dx, 2) + math.pow(dy, 2)) > 0.05:
+                self.ddx = self.last_ddx_ddy[0] + dx / self.nSca
+                self.ddy = self.last_ddx_ddy[1] - dy / self.nSca
 
     def gl_key_pressed(self, *args):
         super().gl_key_pressed(*args)

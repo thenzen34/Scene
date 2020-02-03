@@ -1,15 +1,14 @@
 # coding=utf-8
 from math import *
 from random import randint
-
 from core.class_scene_Gl import *
 
 
-class TurtleScene(Scene2d):
+class TurtleScene:
     def __init__(self, width, height):
-        super().__init__(width, height)
         self.alfas = []
         self.angle = 0
+        super().__init__(width, height)
 
     def pushalfa(self):
         self.alfas.append(self.angle)
@@ -27,11 +26,19 @@ class TurtleScene(Scene2d):
         self.angle += dalfa
         return self
 
+    def get_move_xy(self, r):
+        return r * cos(radians(self.angle)), r * sin(radians(self.angle))
+
+
+class MagnetsBaseScene(TurtleScene, Scene2d):
+    def resize_scene(self, dw, dh):
+        super().resize_scene(dw, dh)
+        # при изменении экрана требуется обновление сгенерированных генерации
+        self.gen_draw()
+
     def move(self, r):
-        return self._linestep(r * cos(radians(self.angle)), r * sin(radians(self.angle)))
+        return self._linestep(*self.get_move_xy(r))
 
-
-class MagnetsBaseScene(TurtleScene):
     def put_ball(self):
         self._circle(self.r, False)
         return self
@@ -98,7 +105,6 @@ class MagnetsBaseScene(TurtleScene):
     #####################
 
     def __init__(self, width, height):
-        super().__init__(width, height)
         self.r = 6  # радиус шарика
         self.h = 27  # высота палочки
         self.length = self.r * 2 + self.h  # растояние между точками
@@ -109,6 +115,7 @@ class MagnetsBaseScene(TurtleScene):
         self.length *= self.zoom
         self.show_move = False
 
+        super().__init__(width, height)
         self.gen_draw()
 
     def move_step(self, r):
@@ -157,12 +164,21 @@ class MagnetsBaseScene(TurtleScene):
     # GLUT_CURSOR_INFO
     # GLUT_CURSOR_FULL_CROSSHAIR прицел GLUT_CURSOR_CROSSHAIR
 
-    def on_mouse_click(self):
-        # типа регенерация объекта
-        self.gen_draw()
+    last_click = 0, 0
+    def on_mouse_click(self, x, y):
+        lx, ly = self.last_click
+        dx = 5
+        length = math.sqrt(math.pow(lx - x, 2) + math.pow(ly - y, 2))
+        if length < dx:
+            self.on_mouse_dbl_click()
+        self.last_click = x, y
         # cur = self.cursors.pop()
         # glutSetCursor(cur)
         # print(cur)
+
+    def on_mouse_dbl_click(self):
+        # типа регенерация объекта
+        self.gen_draw()
 
 
 class MagnetsScene(MagnetsBaseScene):
@@ -265,7 +281,3 @@ class Magnets4Scene(MagnetsBaseScene):
                 .pushalfa().draw5(depth - 1).popalfa()._popstep()._pushstep().move_dalfa(dalfa)
 
         return self._popstep().center()
-
-
-t = Magnets4Scene(640, 480)
-t.draw()

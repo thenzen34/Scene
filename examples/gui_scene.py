@@ -120,6 +120,7 @@ class GuiTestGlScene(SceneThird):
             self.buttons.pop(min_ix)
 
     def resize_scene(self, dw, dh):
+        return
         for x in self.buttons:
             self.buttons[x].resize_scene(dw, dh)
 
@@ -224,7 +225,9 @@ class GuiTestGlScene(SceneThird):
     def redraw(self):
         # type: () -> GuiTestGlScene
 
-        glCallList(self.the_img)
+        # glCallList(self.the_img)
+
+        self.draw_obj()
 
         for x in self.buttons:
             self.buttons[x].draw(self)
