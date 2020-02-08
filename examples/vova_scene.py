@@ -27,12 +27,12 @@ class TurtleScene(Scene):
         return self
 
     def move(self, r):
-        return self._linestep(r * cos(radians(self.angle)), r * sin(radians(self.angle)))
+        return self.i_line_step(r * cos(radians(self.angle)), r * sin(radians(self.angle)))
 
 
 class MagnetsBaseScene(TurtleScene):
     def put_ball(self):
-        return self._circle(self.r, False)
+        return self.i_circle(self.r, False)
 
     def put_stick(self):
         return self.move_step(self.length)
@@ -60,8 +60,8 @@ class MagnetsBaseScene(TurtleScene):
 
     def move_step(self, r):
         if self.show_move:
-            self.move(r // 3)._pushcolor()._setcolor(255, 0, 0)._circle(2, False)._popcolor()._pushcolor() \
-                .move(r // 3)._pushcolor()._setcolor(0, 255, 0)._circle(2, False)._popcolor()._pushcolor() \
+            self.move(r // 3).c_push_color().c_set_color(255, 0, 0).i_circle(2, False).c_pop_color().c_push_color() \
+                .move(r // 3).c_push_color().c_set_color(0, 255, 0).i_circle(2, False).c_pop_color().c_push_color() \
                 .move(r - 2 * (r // 3)).put_ball()
         else:
             self.move(r).put_ball()
@@ -72,7 +72,7 @@ class MagnetsBaseScene(TurtleScene):
         dalfa = 360 / cnt
 
         for x in range(cnt):
-            self._setcolor(100 + (155 // cnt) * x, (255 // cnt) * x, 150 + (105 // cnt) * x)
+            self.c_set_color(100 + (155 // cnt) * x, (255 // cnt) * x, 150 + (105 // cnt) * x)
             self.put_stick_and_ball().move_dalfa(dalfa)
         return self
 
@@ -100,7 +100,7 @@ class MagnetsScene(MagnetsBaseScene):
     def redraw(self):
         # type: () -> MagnetsScene
 
-        self.center().set6() \
+        self.i_center().set6() \
             .set6_2().set6_2().set6_2() \
             .move_dalfa(-120).move(self.length) \
             .move_dalfa(-60) \
@@ -108,9 +108,9 @@ class MagnetsScene(MagnetsBaseScene):
             .set4().move_dalfa(-90).move(self.length) \
             .set4().move_dalfa(-90).move(self.length) \
             .set4().move_dalfa(-90).move(self.length) \
-            ._setcolor(255, 0, 0)._circle(2, False)
+            .c_set_color(255, 0, 0).i_circle(2, False)
 
-        self._pushstep()
+        self.i_push_step()
 
         return super().redraw()
 
@@ -121,7 +121,7 @@ class Magnets2Scene(MagnetsBaseScene):
 
         self.show_move = True
 
-        self.center() \
+        self.i_center() \
             .set3().set4().move(self.length).move_dalfa(-90) \
             .set3().set4().move(self.length).move_dalfa(-90) \
             .set3().set4().move(self.length).move_dalfa(-90) \
@@ -132,9 +132,9 @@ class Magnets2Scene(MagnetsBaseScene):
             .set3().move_dalfa(60) \
             .set3().move_dalfa(60) \
             .set3().move_dalfa(60) \
-            ._setcolor(255, 0, 0).move(10)._circle(2, False)
+            .c_set_color(255, 0, 0).move(10).i_circle(2, False)
 
-        self._pushstep()
+        self.i_push_step()
 
         return super().redraw()
 
@@ -149,8 +149,8 @@ class Magnets3Scene(MagnetsBaseScene):
         dalfa = 360 / c
         cnt = 10
 
-        self.center() \
-            ._setcolor(128, 0, 128).put_ball()
+        self.i_center() \
+            .c_set_color(128, 0, 128).put_ball()
 
         for x in range(cnt):
             for y in range(x // (c - 2)):
@@ -161,7 +161,7 @@ class Magnets3Scene(MagnetsBaseScene):
         for y in range((cnt - 1) // (c - 2)):
             self.put_stick_and_ball()
 
-        self._circle(2, False)._pushstep()
+        self.i_circle(2, False).i_push_step()
 
         return super().redraw()
 
@@ -172,20 +172,20 @@ class Magnets4Scene(MagnetsBaseScene):
             return self
         c = 5
         dalfa = 360 / c
-        self._pushstep().move_angle(180 - self.angle)
+        self.i_push_step().move_angle(180 - self.angle)
 
         for x in range(c):
-            self._setcolor(255, (depth - 1) * (255 // 2), 128).put_stick() \
-                .pushalfa().draw5(depth - 1).popalfa()._popstep()._pushstep().move_dalfa(dalfa)
+            self.c_set_color(255, (depth - 1) * (255 // 2), 128).put_stick() \
+                .pushalfa().draw5(depth - 1).popalfa().i_pop_step().i_push_step().move_dalfa(dalfa)
 
-        return self._popstep()
+        return self.i_pop_step()
 
     def redraw(self):
         # type: () -> Magnets4Scene
 
         self.show_move = True
 
-        self.center() \
+        self.i_center() \
             .draw5(2)
 
         return super().redraw()

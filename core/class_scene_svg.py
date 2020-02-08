@@ -28,11 +28,11 @@ class Scene(BaseScene):
         return self._img.getPixel(x, y)
 
     def get_color(self, r, g, b):
-        # type: (int, int, int) -> str
+        # type: (float, float, float) -> str
         return svgwrite.rgb(r, g, b, '%')
 
     def line(self, x1, y1, x2, y2, color):
-        # type: (int, int, int, int, str) -> Scene
+        # type: (float, float, float, float, str) -> Scene
 
         line = self._img.line(start=(x1, y1), end=(x2, y2), stroke=color)  # type : shapes.Line
         self._img.add(line)
@@ -41,8 +41,8 @@ class Scene(BaseScene):
 
         # обратная система координат
 
-    def line2(self, x1, y1, x2, y2, color):
-        # type: (int, int, int, int, [int, int, int]) -> Scene
+    def line_inv(self, x1, y1, x2, y2, color):
+        # type: (float, float, float, float, [int, int, int]) -> Scene
         return self.line(x1, self.height - y1, x2, self.height - y2, color)
 
     def poly_lines(self, color, points):
@@ -56,14 +56,14 @@ class Scene(BaseScene):
 
         return self
 
-    def ovalspin(self, _cx, _cy, _r1, _r2, u, _color):
+    def oval_spin(self, _cx, _cy, _r1, _r2, u, _color):
         # type: (int, int, int, int, int, [int, int, int]) -> Scene
         return self.arc(_cx, _cy, _r1, _r2, _color, 0, 360, u)
 
-    def circle(self, _cx, _cy, _r, _color, polylines=False):
-        # type: (int, int, int, str) -> Scene
+    def circle(self, _cx, _cy, _r, _color, poly_lines=False):
+        # type: (float, float, float, str, bool) -> Scene
 
-        if polylines:
+        if poly_lines:
             return self.arc(_cx, _cy, _r, _r, _color, 0, 360)
 
         circle = self._img.circle(center=(_cx, _cy), r=_r, stroke=_color, stroke_width=1, fill="none")

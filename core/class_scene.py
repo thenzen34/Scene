@@ -41,7 +41,7 @@ class Scene(BaseScene):
 
     # обратная система координат
 
-    def line2(self, x1, y1, x2, y2, color):
+    def line_inv(self, x1, y1, x2, y2, color):
         # type: (int, int, int, int, str) -> Scene
         return self.line(x1, self.height - y1, x2, self.height - y2, color)
 
@@ -60,13 +60,13 @@ class Scene(BaseScene):
 
         return self
 
-    def ovalspin(self, _cx, _cy, _r1, _r2, u, _color):
+    def oval_spin(self, _cx, _cy, _r1, _r2, u, _color):
         # type: (int, int, int, int, int, str) -> Scene
         return self.arc(_cx, _cy, _r1, _r2, _color, 0, 360, u)
 
-    def circle(self, _cx, _cy, _r, _color, polylines=False):
+    def circle(self, _cx, _cy, _r, _color, poly_lines=False):
         # type: (int, int, int, str) -> Scene
-        if polylines:
+        if poly_lines:
             return self.arc(_cx, _cy, _r, _r, _color, 0, 360)
         c = gr.Circle(gr.Point(_cx, _cy), _r)
         c.setOutline(_color)

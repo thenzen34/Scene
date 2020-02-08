@@ -10,10 +10,10 @@ from core.base_scene import BaseScene
 
 
 class Scene(BaseScene):
-    def center(self):
+    def i_center(self):
         # type: () -> Scene
         return self \
-            ._moveto(0, 0)
+            .i_move_to(0, 0)
 
     window = 0
 
@@ -252,18 +252,18 @@ class Scene(BaseScene):
         cx = self.width / 2  # центр по х
         cy = self.height / 2  # центр по у
         self \
-            ._setcolor(0, 255, 0)._moveto(0, -cy)._linestep(0, self.height)._moveto(-cx, 0)._linestep(self.width, 0)
+            .c_set_color(0, 255, 0).i_move_to(0, -cy).i_line_step(0, self.height).i_move_to(-cx, 0).i_line_step(self.width, 0)
         return self
 
     def get_pixel(self, x, y):
         return 0
 
     def get_color(self, r, g, b):
-        # type: (int, int, int) -> [int, int, int, int]
+        # type: (float, float, float) -> [float, float, float, float]
         return r / 255, g / 255, b / 255, 1
 
     def line(self, x1, y1, x2, y2, color):
-        # type: (int, int, int, int, str) -> Scene
+        # type: (float, float, float, float, str) -> Scene
         glBegin(GL_LINES)
         glColor3d(*color)
         glVertex2f(x1, y1)
@@ -274,12 +274,12 @@ class Scene(BaseScene):
 
     # обратная система координат
 
-    def line2(self, x1, y1, x2, y2, color):
-        # type: (int, int, int, int, [int, int, int]) -> Scene
+    def line_inv(self, x1, y1, x2, y2, color):
+        # type: (float, float, float, float, [float, float, float]) -> Scene
         return self.line(x1, self.height - y1, x2, self.height - y2, color)
 
     def poly_lines(self, color, points):
-        # type: (str, [int, int]) -> Scene
+        # type: (str, [float, float]) -> Scene
         first = points.pop(0)
 
         last = first
@@ -293,14 +293,14 @@ class Scene(BaseScene):
 
         return self
 
-    def ovalspin(self, _cx, _cy, _r1, _r2, u, _color):
-        # type: (int, int, int, int, int, [int, int, int]) -> Scene
+    def oval_spin(self, _cx, _cy, _r1, _r2, u, _color):
+        # type: (float, float, float, float, float, [float, float, float]) -> Scene
         return self.arc(_cx, _cy, _r1, _r2, _color, 0, 360, u)
 
-    def circle(self, _cx, _cy, _r, _color, polylines=False):
-        # type: (int, int, int, str, bool) -> Scene
+    def circle(self, _cx, _cy, _r, _color, poly_lines=False):
+        # type: (float, float, float, str, bool) -> Scene
 
-        if polylines:
+        if poly_lines:
             return self.arc(_cx, _cy, _r, _r, _color, 0, 360)
 
         # circle = self._img.circle(center=(_cx, _cy), r=_r, stroke=_color, stroke_width=1, fill="none")
@@ -310,8 +310,8 @@ class Scene(BaseScene):
 
         return self
 
-    def setpixel(self, _x, _y, _color):
-        # type: (int, int, str) -> Scene
+    def set_pixel(self, _x, _y, _color):
+        # type: (float, float, str) -> Scene
         glBegin(GL_POINTS)
         glColor3d(*_color)
         glVertex2f(_x, _y)
@@ -351,12 +351,12 @@ class SceneThird(Scene):
         cx = self.width / 2  # центр по х
         cy = self.height / 2  # центр по у
         self \
-            ._setcolor(0, 128, 128) \
-            ._moveto(0, -cy)._linestep(0, self.height)._moveto(-cx, 0)._linestep(self.width, 0)
+            .c_set_color(0, 128, 128) \
+            .i_move_to(0, -cy).i_line_step(0, self.height).i_move_to(-cx, 0).i_line_step(self.width, 0)
         return self
 
     def line(self, x1, y1, x2, y2, color):
-        # type: (int, int, int, int, str) -> Scene
+        # type: (float, float, float, float, str) -> Scene
         glBegin(GL_LINES)
         glColor3d(*color)
         c_x, c_y = self.get_xy_scene(x1 + self.width / 2, y1 + self.height / 2)
@@ -367,8 +367,8 @@ class SceneThird(Scene):
 
         return self
 
-    def setpixel(self, _x, _y, _color):
-        # type: (int, int, str) -> Scene
+    def set_pixel(self, _x, _y, _color):
+        # type: (float, float, str) -> Scene
         glBegin(GL_POINTS)
         glColor3d(*_color)
         c_x, c_y = self.get_xy_scene(_x + self.width / 2, _y + self.height / 2)

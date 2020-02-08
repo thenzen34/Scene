@@ -17,10 +17,10 @@ r = 0.3
 
 for x in range(30):
     for y in range(30):
-        t._moveto(start_x * cm_to_point + x * cm_to_point, start_y * cm_to_point + y * cm_to_point) \
-            ._setcolor(0, 0, 0) \
-            ._circle(r * cm_to_point) \
-            ._pushstep()
+        t.i_move_to(start_x * cm_to_point + x * cm_to_point, start_y * cm_to_point + y * cm_to_point) \
+            .c_set_color(0, 0, 0) \
+            .i_circle(r * cm_to_point) \
+            .i_push_step()
         '''
             ._lineANDstep(0, r * cm_to_point)._popstep() \
             ._lineANDstep(0, -r * cm_to_point)._popstep() \

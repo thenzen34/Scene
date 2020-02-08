@@ -43,31 +43,31 @@ class SpiderScene(Scene):
                                                                      [x1, y1, x2, y2])
 
     def setpoint(self):
-        return self._pushcolor()._stepcolor(0, 255, 0)._circle(2)._popcolor()
+        return self.c_push_color().c_step_color(0, 255, 0).i_circle(2).c_pop_color()
 
     def redraw(self):
         # type: () -> SpiderScene
 
         self \
             .lines() \
-            .center() \
-            ._setcolor(255, 0, 0) \
-            ._circle(self.r, True)._pushstep()
+            .i_center() \
+            .c_set_color(255, 0, 0) \
+            .i_circle(self.r, True).i_push_step()
 
         result = self.point_line_circle
         if len(result) > 0:
             # есть точка
             x, y = result
-            self._step(x, y).setpoint()._linestep(0, -self.w)._linestep(-2 * self.length, 0)._linestep(0,
-                                                                                                       self.w).setpoint()
+            self.i_step(x, y).setpoint().i_line_step(0, -self.w).i_line_step(-2 * self.length, 0).i_line_step(0,
+                                                                                                              self.w).setpoint()
 
         self.set_closed(False) \
-            ._popstep() \
-            ._step(0, -self.r2)._arc(self.r1, self.r2, 180, 180)._step(0, self.r1)._arc(self.r2, self.r1, 180,
-                                                                                        180)._popstep() \
-            ._popstep() \
-            ._step(0, self.r2)._arc(self.r1, self.r2, 0, 180)._step(0, -self.r1)._arc(self.r2, self.r1, 0,
-                                                                                      180)._popstep()
+            .i_pop_step() \
+            .i_step(0, -self.r2).i_arc(self.r1, self.r2, 180, 180).i_step(0, self.r1).i_arc(self.r2, self.r1, 180,
+                                                                                            180).i_pop_step() \
+            .i_pop_step() \
+            .i_step(0, self.r2).i_arc(self.r1, self.r2, 0, 180).i_step(0, -self.r1).i_arc(self.r2, self.r1, 0,
+                                                                                          180).i_pop_step()
         # ._arcstep(r1, r2, direction)
 
         result = self.point_ellipse1_circle
@@ -75,11 +75,11 @@ class SpiderScene(Scene):
         if len(result) > 0:
             # есть точка
             x, y = result
-            self.center() \
-                ._step(x, y).setpoint()._popstep() \
-                ._step(-x, y).setpoint()._popstep() \
-                ._step(x, -y).setpoint()._popstep() \
-                ._step(-x, -y).setpoint()._popstep()
+            self.i_center() \
+                .i_step(x, y).setpoint().i_pop_step() \
+                .i_step(-x, y).setpoint().i_pop_step() \
+                .i_step(x, -y).setpoint().i_pop_step() \
+                .i_step(-x, -y).setpoint().i_pop_step()
             # self.circle(x, y, 2, self.getcolor(0, 255, 0))
             # self.circle(0, 0, r, self.getcolor(0, 0, 255))
             # self.ellipse(0, r2, r1, r2, self.getcolor(0, 0, 255))
@@ -89,11 +89,11 @@ class SpiderScene(Scene):
         if len(result) > 0:
             # есть точка
             x, y = result
-            self.center() \
-                ._step(x, y).setpoint()._popstep() \
-                ._step(-x, y).setpoint()._popstep() \
-                ._step(x, -y).setpoint()._popstep() \
-                ._step(-x, -y).setpoint()._popstep()
+            self.i_center() \
+                .i_step(x, y).setpoint().i_pop_step() \
+                .i_step(-x, y).setpoint().i_pop_step() \
+                .i_step(x, -y).setpoint().i_pop_step() \
+                .i_step(-x, -y).setpoint().i_pop_step()
             # self.circle(x, y, 2, self.getcolor(0, 255, 0))
             # self.circle(0, 0, r, self.getcolor(0, 0, 255))
             # self.ellipse(0, r2, r1, r2, self.getcolor(0, 0, 255))

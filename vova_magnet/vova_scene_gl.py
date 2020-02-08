@@ -5,9 +5,31 @@ from core.magnet_scene_GL import *
 from magnet_data_class import MagnetsData
 from tools_class import ToolsBase, NoneTool, StickTool, BallTool, DelBallTool, Ball3Tool, Ball4Tool, Ball6Tool
 
+global GLUT_STROKE_ROMAN
+
 
 # типа представление данных
 class Magnets5Scene(MagnetsData, MagnetsBaseScene):
+    def output(self, x, y, *args):
+        glPushMatrix()
+        c = 1 / 10000
+        w = 6
+        glScalef(c * w, c * w, c * w)
+        width = 0
+        height = glutStrokeHeight(GLUT_STROKE_ROMAN)
+
+        params = list(args)
+        fmt = params.pop(0)
+        string = fmt % tuple(params)
+        for p in string:
+            width += glutStrokeWidth(GLUT_STROKE_ROMAN, ord(p))
+
+        glTranslatef(x - width / 2, y - height / 4, 0)
+        for p in string:
+            glutStrokeCharacter(GLUT_STROKE_ROMAN, ord(p))
+
+        glPopMatrix()
+
     def prepare_tool(self, id):
         if self.cur_tool_id >= 0:
             tool = self.tools[self.cur_tool_id]
@@ -140,10 +162,48 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
         cur_x, cur_y = (x - self.width / 2) / self.nSca - n_x, (y - self.height / 2) / self.nSca - n_y
         return cur_x, cur_y
 
-    def on_mouse_click(self, x, y):
-        cur_x, cur_y = self.get_real_xy(x, y)
+    def get_current_tools(self):
         if 0 <= self.cur_tool_id < len(self.tools):
             tool = self.tools[self.cur_tool_id]
+            return tool
+        return False
+
+    def on_mouse_wheel_up(self, x, y):
+        cur_x, cur_y = self.get_real_xy(x, y)
+        tool = self.get_current_tools()
+        if tool:
+            # проверяем клик по шарам
+            i = 0
+            while i < len(self.not_virtual):
+                ix = self.not_virtual[i]
+                if self.balls[ix].check_click(cur_x, cur_y):
+                    if tool.on_mouse_wheel_up(cur_x, cur_y):
+                        return True
+                    break
+                i += 1
+
+        super().on_mouse_wheel_up(x, y)
+
+    def on_mouse_wheel_down(self, x, y):
+        cur_x, cur_y = self.get_real_xy(x, y)
+        tool = self.get_current_tools()
+        if tool:
+            # проверяем клик по шарам
+            i = 0
+            while i < len(self.not_virtual):
+                ix = self.not_virtual[i]
+                if self.balls[ix].check_click(cur_x, cur_y):
+                    if tool.on_mouse_wheel_down(cur_x, cur_y):
+                        return True
+                    break
+                i += 1
+
+        super().on_mouse_wheel_down(x, y)
+
+    def on_mouse_click(self, x, y):
+        cur_x, cur_y = self.get_real_xy(x, y)
+        tool = self.get_current_tools()
+        if tool:
             if tool.click(cur_x, cur_y):
                 self.gen_draw()
 
@@ -168,10 +228,12 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
     def redraw(self):
         super().redraw()
 
+        self.output(0, 0, 'text')
+
         cur_x, cur_y = self.get_real_xy(self.cur_x, self.cur_y)
 
-        if 0 <= self.cur_tool_id < len(self.tools):
-            tool = self.tools[self.cur_tool_id]
+        tool = self.get_current_tools()
+        if tool:
             tool.draw(cur_x, cur_y)
 
         return self
@@ -189,16 +251,16 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
                 if self.last_ball == i:
                     g = 255
                 if ball.virtual:
-                    self._setcolor(100, 0, g)
+                    self.c_set_color(100, 0, g)
                 else:
-                    self._setcolor(255, 0, g)
-                self._moveto(*ball.get_xy()).put_ball()
+                    self.c_set_color(255, 0, g)
+                self.i_move_to(*ball.get_xy()).put_ball()
             i += 1
 
         for stick in self.sticks:
             ball_start = self.balls[stick.start_ball_id]
             ball_end = self.balls[stick.end_ball_id]
-            self._setcolor(0, 100, 200)._moveto(*ball_start.get_xy())._lineto(*ball_end.get_xy())
+            self.c_set_color(0, 100, 200).i_move_to(*ball_start.get_xy()).i_line_to(*ball_end.get_xy())
 
         return self
 
@@ -208,3 +270,4 @@ t.draw()
 
 # TODO undo show count stick ball
 #  переделать ссылки по id -> object_pointer ?
+#  рефакторинг сцены разбить на независимые участки - текст, геометрия, цвет, ..

@@ -10,18 +10,18 @@ class NewScene(Scene):
     def redraw(self):
         # type: () -> NewScene
         self \
-            ._setcolor(255, 0, 0) \
-            ._moveto(self.width / 2, self.height / 2) \
-            ._pushstep() \
-            ._lineto(50, 50) \
-            ._stepcolor(0, 255, 0) \
-            ._popstep() \
-            ._stepcolor(0, 0, 255) \
-            ._lineto(50, 200) \
-            ._popcolor() \
-            ._lineto(250, 250) \
-            ._popcolor() \
-            ._circle(10)
+            .c_set_color(255, 0, 0) \
+            .i_move_to(self.width / 2, self.height / 2) \
+            .i_push_step() \
+            .i_line_to(50, 50) \
+            .c_step_color(0, 255, 0) \
+            .i_pop_step() \
+            .c_step_color(0, 0, 255) \
+            .i_line_to(50, 200) \
+            .c_pop_color() \
+            .i_line_to(250, 250) \
+            .c_pop_color() \
+            .i_circle(10)
 
         return super(NewScene, self).redraw()
 
@@ -31,10 +31,10 @@ class PicScene(Scene):
     def redraw(self):
         # type: () -> PicScene
         self \
-            ._setcolor(255, 0, 0) \
-            ._moveto(self.width / 2, self.height / 2) \
-            ._setpixel() \
-            ._circle(10)
+            .c_set_color(255, 0, 0) \
+            .i_move_to(self.width / 2, self.height / 2) \
+            .i_set_pixel() \
+            .i_circle(10)
 
         return super(PicScene, self).redraw()
 

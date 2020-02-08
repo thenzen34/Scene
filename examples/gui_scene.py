@@ -104,7 +104,7 @@ class GraphTPoint(TPoint):
 
 
 class GuiTestGlScene(SceneThird):
-    def on_mouse_click(self):
+    def on_mouse_click(self, x, y):
         # todo test button or find first in point
         x, y = self.start_click
         x -= self.width / 2
@@ -120,12 +120,14 @@ class GuiTestGlScene(SceneThird):
             self.buttons.pop(min_ix)
 
     def resize_scene(self, dw, dh):
-        return
+        '''
         for x in self.buttons:
             self.buttons[x].resize_scene(dw, dh)
 
         for point in self.points:
             point.resize_scene(dw, dh)
+        '''
+        return
 
     buttons = dict({NewButton(TPoint(0, 0)) for _ in range(0)})
     points = [GraphTPoint(0, 0, (0, 0, 0)) for _ in range(0)]

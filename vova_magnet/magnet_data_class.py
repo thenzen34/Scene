@@ -98,6 +98,7 @@ class MagnetsData:
         :param ix: int
         """
         self.sticks.append(Stick(self.last_ball, ix))
+        # print('add stick')
 
     def rename_ball(self, ball_id, new_ix):
         """
@@ -151,7 +152,12 @@ class MagnetsData:
         # print('remove ball')
 
     def remove_stick(self, ix):
+        """
+
+                :param ix: int
+                """
         self.sticks.pop(ix)
+        # print('remove stick')
 
     def add_to_parents(self, ball_id, possible_parents, all_balls_xy):
         """

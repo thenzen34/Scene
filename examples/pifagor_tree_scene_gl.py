@@ -34,16 +34,16 @@ class PiTree1Scene(Scene2d):
     def add(self, x, y, r, ugol, count):
         # type: (float, float, float, float, float) -> PiTree1Scene
         self \
-            ._moveto(x, y) \
-            ._lineto(x - r * sin(ugol), y - r * cos(ugol)) \
-            ._lineto(x - r * sin(ugol), y - r * cos(ugol)) \
-            ._lineto(x - r * sin(ugol) - r * cos(ugol), y - r * cos(ugol) + r * sin(ugol)) \
-            ._lineto(x - r * cos(ugol), y + r * sin(ugol)) \
-            ._lineto(x, y) \
-            ._pushcolor() \
-            ._setcolor(255, 255, 255) \
-            ._setpixel() \
-            ._popcolor()
+            .i_move_to(x, y) \
+            .i_line_to(x - r * sin(ugol), y - r * cos(ugol)) \
+            .i_line_to(x - r * sin(ugol), y - r * cos(ugol)) \
+            .i_line_to(x - r * sin(ugol) - r * cos(ugol), y - r * cos(ugol) + r * sin(ugol)) \
+            .i_line_to(x - r * cos(ugol), y + r * sin(ugol)) \
+            .i_line_to(x, y) \
+            .c_push_color() \
+            .c_set_color(255, 255, 255) \
+            .i_set_pixel() \
+            .c_pop_color()
 
         if count == 0:
             return self
@@ -58,7 +58,7 @@ class PiTree1Scene(Scene2d):
     def drawing(self, por):  # type: (int) -> PiTree1Scene
         length = 15  # размерность
 
-        self.center()._setcolor(255, 0, 0).add(length * 5, self.height / 2, 5 * length, 0 * pi / 8, por - 1)
+        self.i_center().c_set_color(255, 0, 0).add(length * 5, self.height / 2, 5 * length, 0 * pi / 8, por - 1)
         return self
 
     def draw_obj(self):  # type: () -> PiTree1Scene

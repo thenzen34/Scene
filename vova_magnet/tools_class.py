@@ -37,6 +37,24 @@ class ToolsBase:
         """
         return False
 
+    def on_mouse_wheel_up(self, cur_x, cur_y):
+        """
+
+        :param cur_x: float
+        :param cur_y: float
+        :return bool
+        """
+        return False
+
+    def on_mouse_wheel_down(self, cur_x, cur_y):
+        """
+
+        :param cur_x: float
+        :param cur_y: float
+        :return bool
+        """
+        return False
+
     def get_name(self):
         """
 
@@ -64,7 +82,7 @@ class NoneTool(ToolsBase):
         :param cur_x: float
         """
         r = 2
-        return self.scene._pushstep()._moveto(cur_x - r, cur_y - r)._circle(r)._popstep()
+        return self.scene.i_push_step().i_move_to(cur_x - r, cur_y - r).i_circle(r).i_pop_step()
 
 
 class BallTool(ToolsBase):
@@ -106,8 +124,8 @@ class BallTool(ToolsBase):
         return False
 
     def get_move_xy_function(self, angle, length):
-        c_x, c_y = self.scene.pushalfa().move_angle(angle).get_move_xy(length)
-        self.scene.popalfa()
+        c_x, c_y = self.scene.t_push_alfa().move_angle(angle).get_move_xy(length)
+        self.scene.t_pop_alfa()
         return c_x, c_y
 
     def draw(self, cur_x, cur_y):
@@ -117,10 +135,10 @@ class BallTool(ToolsBase):
         :param cur_y: float
         :param cur_x: float
         """
-        self.scene.pushalfa()._pushstep()._moveto(cur_x, cur_y)._setcolor(100, 100, 255)
+        self.scene.t_push_alfa().i_push_step().i_move_to(cur_x, cur_y).c_set_color(100, 100, 255)
 
         self.scene.put_ball()
-        return self.scene._popstep().popalfa()
+        return self.scene.i_pop_step().t_pop_alfa()
 
     def finish(self):
         self.data.clear_virtual_ball()
@@ -147,12 +165,10 @@ class StickTool(ToolsBase):
                         result = sorted([self.data.last_ball, ix])
                         if all_stick_ball_ids.count(result) == 0:
                             self.data.new_stick(ix)
-                            print('add stick')
                         else:
                             if self.REMOVE:
                                 ix_stick = all_stick_ball_ids.index(result)
-                                self.data.sticks.pop(ix_stick)
-                                print('remove stick')
+                                self.data.remove_stick(ix_stick)
                     self.data.last_ball = -1
                 return True
             i += 1
@@ -189,6 +205,26 @@ class Ball3Tool(ToolsBase):
     def get_name(self):
         return '{0} Ball'.format(self.cnt)
 
+    def on_mouse_wheel_up(self, cur_x, cur_y):
+        """
+
+        :param cur_x: float
+        :param cur_y: float
+        :return bool
+        """
+        self.angle -= 30
+        return True
+
+    def on_mouse_wheel_down(self, cur_x, cur_y):
+        """
+
+        :param cur_x: float
+        :param cur_y: float
+        :return bool
+        """
+        self.angle += 30
+        return True
+
     def click(self, cur_x, cur_y):
         # проверяем клик по шарам
         i = 0
@@ -202,7 +238,7 @@ class Ball3Tool(ToolsBase):
                 tool_ball = BallTool(self.data, self.scene)
                 tool_ball.click(cur_x, cur_y)
 
-                self.scene.pushalfa()
+                self.scene.t_push_alfa()
                 c_x, c_y = cur_x, cur_y
                 for x in range(self.cnt - 1):
                     angle = self.angle + self.dalfa * x
@@ -213,7 +249,7 @@ class Ball3Tool(ToolsBase):
                     if x < self.cnt - 2:
                         tool_ball.click(c_x, c_y)
 
-                self.scene.popalfa()
+                self.scene.t_pop_alfa()
                 self.data.last_ball = -1
 
                 # добавляем стики через StickTool
@@ -221,7 +257,7 @@ class Ball3Tool(ToolsBase):
                 tool_stick.REMOVE = False
                 tool_stick.click(cur_x, cur_y)
 
-                self.scene.pushalfa()
+                self.scene.t_push_alfa()
                 c_x, c_y = cur_x, cur_y
                 for x in range(self.cnt):
                     angle = self.angle + self.dalfa * x
@@ -232,12 +268,12 @@ class Ball3Tool(ToolsBase):
                     if x < self.cnt - 1:
                         tool_stick.click(c_x, c_y)
 
-                self.scene.popalfa()
+                self.scene.t_pop_alfa()
                 self.data.last_ball = -1
                 return True
             i += 1
 
-        self.angle += 30
+        # self.angle += 30
         return False
 
     def draw(self, cur_x, cur_y):
@@ -247,11 +283,11 @@ class Ball3Tool(ToolsBase):
         :param cur_y: float
         :param cur_x: float
         """
-        self.scene.pushalfa()._pushstep()._moveto(cur_x, cur_y).move_angle(self.angle)._setcolor(100, 100, 255)
+        self.scene.t_push_alfa().i_push_step().i_move_to(cur_x, cur_y).move_angle(self.angle).c_set_color(100, 100, 255)
 
         for x in range(self.cnt):
             self.scene.put_stick_and_ball().move_dalfa(self.dalfa)
-        return self.scene._popstep().popalfa()
+        return self.scene.i_pop_step().t_pop_alfa()
 
 
 class Ball4Tool(Ball3Tool):

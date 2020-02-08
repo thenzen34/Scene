@@ -73,11 +73,11 @@ class TCoords2d(object):
 
     def clear(self):
         if 0 <= self.x <= self.scene.width >= self.y >= 0:
-            self.scene.setpixel(self.x, self.y, self.scene.BACKGROUND)
+            self.scene.set_pixel(self.x, self.y, self.scene.BACKGROUND)
 
     def draw(self):
         if 0 <= self.x <= self.scene.width >= self.y >= 0:
-            self.scene.setpixel(self.x, self.y, self.scene.color)
+            self.scene.set_pixel(self.x, self.y, self.scene.color)
 
     def __init__(self, scene):
         self.scene = scene

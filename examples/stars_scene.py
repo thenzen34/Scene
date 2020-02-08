@@ -21,7 +21,7 @@ class StarsScene(Scene):
         r1 = cy
         r2 = cy / 4
 
-        self.setpixel(cx, cy, color)
+        self.set_pixel(cx, cy, color)
         self.circle(cx, cy, 15, color)
 
         cnt = 3
@@ -44,9 +44,9 @@ class StarsScene(Scene):
                     # есть точка
                     x, y = result
 
-                    self.center() \
-                        ._step(x, y)._setcolor(0, 0, 255)._circle(10)._popstep() \
-                        ._step(x1, y1)._linestep(x2 - x1, y2 - y1)
+                    self.i_center() \
+                        .i_step(x, y).c_set_color(0, 0, 255).i_circle(10).i_pop_step() \
+                        .i_step(x1, y1).i_line_step(x2 - x1, y2 - y1)
 
                     pygame.font.init()
 
@@ -55,9 +55,9 @@ class StarsScene(Scene):
                     place = text.get_rect(center=(self.width / 2, self.height - 72))
                     self.text(text, place)
 
-            self.ovalspin(cx, cy, r1, r2, u, color)
+            self.oval_spin(cx, cy, r1, r2, u, color)
             for iy in range(cnt2):
-                x, y = self.getacrpoint(r1, r2, iy * alfa2, u)
+                x, y = self.get_acr_point(r1, r2, iy * alfa2, u)
                 self.circle(cx + x, cy + y, 3, self.get_color(0, 255, 0))
                 self.line(cx, cy, cx + x, cy + y, self.get_color(0, 0, 255))
 

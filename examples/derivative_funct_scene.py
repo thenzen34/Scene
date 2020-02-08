@@ -32,7 +32,7 @@ class DerivativeFunctScene(Scene):
         last_y = 0.0
         cy = self.height / 4
 
-        self._setcolor(0, 255, 0)._moveto(0, cy * 3)
+        self.c_set_color(0, 255, 0).i_move_to(0, cy * 3)
 
         for x in range(self.width):
             if self.funct_type == 0 or self.len == 0:
@@ -46,7 +46,7 @@ class DerivativeFunctScene(Scene):
             dy = y - last_y
             last_y = y
 
-            self._lineto(x, dy + cy * 3)
+            self.i_line_to(x, dy + cy * 3)
 
             self.len -= 1
 
