@@ -1,7 +1,6 @@
-from base_classes import ToolsBaseABC
+from core.magnet_scene_GL import MagnetsBaseScene
 from magnet_data_class import MagnetsData
 
-from core.magnet_scene_GL import MagnetsBaseScene
 
 # типа контроллеры данных
 
@@ -15,7 +14,41 @@ class ToolsBase:
         self.scene = scene
         self.data = data
 
-class NoneTool(ToolsBase, ToolsBaseABC):
+        self.init()
+
+    def init(self):
+        pass
+
+    def draw(self, cur_x, cur_y):
+        """
+
+        :param cur_x: float
+        :param cur_y: float
+        :return MagnetsBaseScene
+        """
+        return self.scene
+
+    def click(self, cur_x, cur_y):
+        """
+
+        :param cur_x: float
+        :param cur_y: float
+        :return bool
+        """
+        return False
+
+    def get_name(self):
+        """
+
+        :return str
+        """
+        return 'Unknown'
+
+    def finish(self):
+        self.data.last_ball = -1
+
+
+class NoneTool(ToolsBase):
     def get_name(self):
         return 'None'
 
@@ -34,7 +67,7 @@ class NoneTool(ToolsBase, ToolsBaseABC):
         return self.scene._pushstep()._moveto(cur_x - r, cur_y - r)._circle(r)._popstep()
 
 
-class BallTool(ToolsBase, ToolsBaseABC):
+class BallTool(ToolsBase):
     def get_name(self):
         return 'Ball'
 
@@ -45,16 +78,7 @@ class BallTool(ToolsBase, ToolsBaseABC):
             while i < len(self.data.virtual):
                 ix = self.data.virtual[i]
                 if self.data.balls[ix].check_click(cur_x, cur_y):
-                    new_ix = max(self.data.not_virtual) + 1
-                    ball = self.data.balls[ix]
-
-                    self.data.virtual.remove(ix)
-                    ball.set_not_virtual()
-
-                    self.data.clear_virtual_ball()
-                    self.data.not_virtual.append(new_ix)
-
-                    self.data.balls[self.data.last_ball].add_parent(new_ix)
+                    self.data.set_ball_not_virtual(ix)
 
                     self.data.last_ball = -1
                     return True
@@ -79,8 +103,6 @@ class BallTool(ToolsBase, ToolsBaseABC):
                     self.data.virtual += self.data.get_virtual_balls(ix, self.get_move_xy_function)
                     return True
                 i += 1
-        '''
-        '''
         return False
 
     def get_move_xy_function(self, angle, length):
@@ -89,10 +111,25 @@ class BallTool(ToolsBase, ToolsBaseABC):
         return c_x, c_y
 
     def draw(self, cur_x, cur_y):
-        pass
+        # type: (float, float) -> ()
+        """
+
+        :param cur_y: float
+        :param cur_x: float
+        """
+        self.scene.pushalfa()._pushstep()._moveto(cur_x, cur_y)._setcolor(100, 100, 255)
+
+        self.scene.put_ball()
+        return self.scene._popstep().popalfa()
+
+    def finish(self):
+        self.data.clear_virtual_ball()
+        super().finish()
 
 
-class StickTool(ToolsBase, ToolsBaseABC):
+class StickTool(ToolsBase):
+    REMOVE = True
+
     def get_name(self):
         return 'Stick'
 
@@ -112,22 +149,17 @@ class StickTool(ToolsBase, ToolsBaseABC):
                             self.data.new_stick(ix)
                             print('add stick')
                         else:
-                            ix_stick = all_stick_ball_ids.index(result)
-                            self.data.sticks.pop(ix_stick)
-                            print('remove stick')
+                            if self.REMOVE:
+                                ix_stick = all_stick_ball_ids.index(result)
+                                self.data.sticks.pop(ix_stick)
+                                print('remove stick')
                     self.data.last_ball = -1
                 return True
             i += 1
         return False
 
-    def draw(self, cur_x, cur_y):
-        pass
 
-
-class DelBallTool(ToolsBase, ToolsBaseABC):
-    def draw(self, cur_x, cur_y):
-        pass
-
+class DelBallTool(ToolsBase):
     def click(self, cur_x, cur_y):
         # удалить стики, связи у родителей, фикс очереди
         i = 0
@@ -143,3 +175,94 @@ class DelBallTool(ToolsBase, ToolsBaseABC):
 
     def get_name(self):
         return 'Del ball'
+
+
+class Ball3Tool(ToolsBase):
+    angle = 0.
+    dalfa = 0.
+    cnt = 3
+
+    def init(self):
+        super().init()
+        self.dalfa = 360 // self.cnt
+
+    def get_name(self):
+        return '{0} Ball'.format(self.cnt)
+
+    def click(self, cur_x, cur_y):
+        # проверяем клик по шарам
+        i = 0
+        while i < len(self.data.not_virtual):
+            ix = self.data.not_virtual[i]
+            if self.data.balls[ix].check_click(cur_x, cur_y):
+                # прикрепляем
+                ball = self.data.balls[ix]
+
+                # добавляем шары через BallTool
+                tool_ball = BallTool(self.data, self.scene)
+                tool_ball.click(cur_x, cur_y)
+
+                self.scene.pushalfa()
+                c_x, c_y = cur_x, cur_y
+                for x in range(self.cnt - 1):
+                    angle = self.angle + self.dalfa * x
+                    d_x, d_y = tool_ball.get_move_xy_function(angle, ball.length)
+                    c_x += d_x
+                    c_y += d_y
+                    tool_ball.click(c_x, c_y)
+                    if x < self.cnt - 2:
+                        tool_ball.click(c_x, c_y)
+
+                self.scene.popalfa()
+                self.data.last_ball = -1
+
+                # добавляем стики через StickTool
+                tool_stick = StickTool(self.data, self.scene)
+                tool_stick.REMOVE = False
+                tool_stick.click(cur_x, cur_y)
+
+                self.scene.pushalfa()
+                c_x, c_y = cur_x, cur_y
+                for x in range(self.cnt):
+                    angle = self.angle + self.dalfa * x
+                    d_x, d_y = tool_ball.get_move_xy_function(angle, ball.length)
+                    c_x += d_x
+                    c_y += d_y
+                    tool_stick.click(c_x, c_y)
+                    if x < self.cnt - 1:
+                        tool_stick.click(c_x, c_y)
+
+                self.scene.popalfa()
+                self.data.last_ball = -1
+                return True
+            i += 1
+
+        self.angle += 30
+        return False
+
+    def draw(self, cur_x, cur_y):
+        # type: (float, float) -> ()
+        """
+
+        :param cur_y: float
+        :param cur_x: float
+        """
+        self.scene.pushalfa()._pushstep()._moveto(cur_x, cur_y).move_angle(self.angle)._setcolor(100, 100, 255)
+
+        for x in range(self.cnt):
+            self.scene.put_stick_and_ball().move_dalfa(self.dalfa)
+        return self.scene._popstep().popalfa()
+
+
+class Ball4Tool(Ball3Tool):
+    cnt = 4
+
+
+'''
+class Ball5Tool(Ball3Tool):
+    cnt = 5
+'''
+
+
+class Ball6Tool(Ball3Tool):
+    cnt = 6

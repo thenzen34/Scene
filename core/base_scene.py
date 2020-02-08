@@ -267,6 +267,8 @@ class BaseScene(object):
     # def fillcircle
     # def fillrectangle
 
+    # TODO разобраться с доступами что от куда доступно
+
     def _moveto(self, x, y):
         # type: (float, float) -> BaseScene
         self._x = x

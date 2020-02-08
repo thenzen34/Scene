@@ -1,9 +1,9 @@
+from math import *
+
 from ball_class import Ball
+from core.stream_io import StreamIO
 from stick_class import Stick
 
-from core.stream_io import StreamIO
-
-from math import *
 
 # типа модель данных
 class MagnetsData:
@@ -74,10 +74,29 @@ class MagnetsData:
         ball.virtual = False
         self.not_virtual.append(ix)
         self.balls.append(ball)
-        # self.virtual += ball.set_not_virtual(self.balls, self)
         return ball
 
+    def set_ball_not_virtual(self, ix):
+        """
+
+        :param ix: int
+        """
+        new_ix = max(self.not_virtual) + 1
+        ball = self.balls[ix]
+
+        self.virtual.remove(ix)
+        ball.set_not_virtual()
+
+        self.clear_virtual_ball()
+        self.not_virtual.append(new_ix)
+
+        self.balls[self.last_ball].add_parent(new_ix)
+
     def new_stick(self, ix):
+        """
+
+        :param ix: int
+        """
         self.sticks.append(Stick(self.last_ball, ix))
 
     def rename_ball(self, ball_id, new_ix):
@@ -162,10 +181,13 @@ class MagnetsData:
         # add 12 ball
         angles = [0, 60, 90, 120, 180, 240, 270, 300]
         angles += [30, 150, 210, 330]
+
+        # angles += [72, 144, 216, 288]
         result = []
         for angle in angles:
             x, y = get_move_xy_function(angle, cur_ball.length)
-            result.append((x, y, (x + cur_ball.x, y + cur_ball.y), (trunc(x + cur_ball.x)  // cur_ball.r, trunc(y + cur_ball.y) // cur_ball.r)))
+            result.append((x, y, (x + cur_ball.x, y + cur_ball.y),
+                           (trunc(x + cur_ball.x) // cur_ball.r, trunc(y + cur_ball.y) // cur_ball.r)))
 
         return result
 
@@ -179,16 +201,14 @@ class MagnetsData:
 
         cur_ball = self.balls[ball_id]
         # add new virtual check not duplicate
-        all_balls_xy = [tuple(trunc(x) // cur_ball.r for x in x.get_xy()) for x in self.balls] # if x.enable
-        # print(all_balls_xy)
+        all_balls_xy = [tuple(trunc(x) // cur_ball.r for x in x.get_xy()) for x in self.balls]  # if x.enable
 
-        all_posible_virtual = []
+        all_possible_virtual = []
 
         for x, y, result, result_search in self.get_all_parents_ball(ball_id, get_move_xy_function):
             if all_balls_xy.count(result_search) == 0:
-                # all_posible_virtual.append(result)
                 ix = len(self.balls)
-                all_posible_virtual.append(ix)
+                all_possible_virtual.append(ix)
                 ball = Ball(*result, cur_ball.length, cur_ball.r, ix)
                 self.balls.append(ball)
                 self.add_to_parents(ix, self.get_all_parents_ball(ix, get_move_xy_function), all_balls_xy)
@@ -202,5 +222,5 @@ class MagnetsData:
                     ball.add_parent(cur_ball.s_id)
                     cur_ball.parents_id.append(ix)
 
-        # print('add {0} balls'.format(len(all_posible_virtual)))
-        return all_posible_virtual
+        # print('add {0} balls'.format(len(all_possible_virtual)))
+        return all_possible_virtual

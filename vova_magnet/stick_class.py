@@ -1,5 +1,6 @@
-from core.stream_io import StreamIO
 from base_classes import StreamData
+from core.stream_io import StreamIO
+
 
 class Stick(StreamData):
     def load_from_stream(self, stream):

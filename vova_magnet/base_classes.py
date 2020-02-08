@@ -10,28 +10,3 @@ class StreamData(ABC):
     @abstractmethod
     def save_to_stream(self, stream):
         pass
-
-class ToolsBaseABC(ABC):
-    @abstractmethod
-    def draw(self, cur_x, cur_y):
-        """
-
-        :param cur_x: float
-        :param cur_y: float
-        :return bool
-        """
-        pass
-
-    @abstractmethod
-    def click(self, cur_x, cur_y):
-        """
-
-        :param cur_x: float
-        :param cur_y: float
-        :return bool
-        """
-        pass
-
-    @abstractmethod
-    def get_name(self):
-        pass

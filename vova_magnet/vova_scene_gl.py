@@ -1,17 +1,33 @@
-from core.magnet_scene_GL import *
-from tkinter import filedialog as fd
 import tkinter as tk
+from tkinter import filedialog as fd
 
-
-
-from base_classes import ToolsBaseABC
+from core.magnet_scene_GL import *
 from magnet_data_class import MagnetsData
-from tools_class import NoneTool, StickTool, BallTool, DelBallTool
+from tools_class import ToolsBase, NoneTool, StickTool, BallTool, DelBallTool, Ball3Tool, Ball4Tool, Ball6Tool
+
 
 # типа представление данных
 class Magnets5Scene(MagnetsData, MagnetsBaseScene):
-    cur_tool_id = -1
+    def prepare_tool(self, id):
+        if self.cur_tool_id >= 0:
+            tool = self.tools[self.cur_tool_id]
+            tool.finish()
+        self.cur_tool_id = id
+        # todo old tool finish
+        self.last_ball = -1
+        self.gen_draw()
 
+    # debug = True
+    def gl_key_pressed(self, *args):
+        super().gl_key_pressed(*args)
+        cmds = [bytes(str(x), 'UTF') for x in range(10)]
+        cmd = args[0]
+        if cmds.count(cmd) > 0:
+            ix = cmds.index(cmd)
+            if ix < len(self.tools):
+                self.prepare_tool(ix)
+
+    cur_tool_id = -1
 
     FILE_SAVE_MENU_ID = 6
     FILE_LOAD_MENU_ID = 7
@@ -26,7 +42,8 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
 
     def load_from_file(self):
         root = tk.Tk()
-        file_name = fd.askopenfilename(initialdir='../vova_magnet', filetypes=(('Magnet files', '*.magnets34'), ('all', '*.*')))
+        file_name = fd.askopenfilename(initialdir='../vova_magnet',
+                                       filetypes=(('Magnet files', '*.magnets34'), ('all', '*.*')))
         root.destroy()
 
         if not file_name:
@@ -42,7 +59,8 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
 
     def save_to_file(self):
         root = tk.Tk()
-        file_name = fd.asksaveasfilename(initialdir='../vova_magnet', filetypes=(('Magnet files', '*.magnets34'), ('all', '*.*')))
+        file_name = fd.asksaveasfilename(initialdir='../vova_magnet',
+                                         filetypes=(('Magnet files', '*.magnets34'), ('all', '*.*')))
         root.destroy()
 
         if not file_name:
@@ -67,7 +85,8 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
             self.new_ball(0, 0, self.length, self.r)
             self.gen_draw()
         elif menu_id >= self.TOOLS_MENU_START_ID:
-            self.cur_tool_id = menu_id - self.TOOLS_MENU_START_ID
+            self.prepare_tool(menu_id - self.TOOLS_MENU_START_ID)
+
         return 0
 
     def create_menu(self):
@@ -82,11 +101,12 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
         glutAddMenuEntry("Reset", self.RESET_MENU_ID)
 
         glutAttachMenu(GLUT_MIDDLE_BUTTON)
+
     """
     для двойного клика правки в on_mouse_click
     """
 
-    tools = [ToolsBaseABC() for _ in range(0)]
+    tools = [ToolsBase() for _ in range(0)]
     tools_submenu = -1
 
     def add_tool(self, tool):
@@ -94,7 +114,7 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
 
         :type tool: ToolsBaseABC
         """
-        glutAddMenuEntry(tool.get_name(), self.TOOLS_MENU_START_ID + len(self.tools))
+        glutAddMenuEntry('{0} - {1}'.format(len(self.tools), tool.get_name()), self.TOOLS_MENU_START_ID + len(self.tools))
         self.tools.append(tool)
 
     def init(self):
@@ -105,7 +125,11 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
         self.add_tool(NoneTool(self, self))
         self.add_tool(BallTool(self, self))
         self.add_tool(StickTool(self, self))
+        self.add_tool(Ball3Tool(self, self))
+        self.add_tool(Ball4Tool(self, self))
+        # self.add_tool(Ball5Tool(self, self))
         self.add_tool(DelBallTool(self, self))
+        self.add_tool(Ball6Tool(self, self))
         self.create_menu()
 
     def get_real_xy(self, x, y):
@@ -158,7 +182,7 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
 
         i = 0
         while i < len(self.balls):
-            #for ball in self.balls:
+            # for ball in self.balls:
             ball = self.balls[i]
             if ball.enable:
                 g = 0
@@ -182,8 +206,5 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
 t = Magnets5Scene(640, 480)
 t.draw()
 
-# TODO undo, remove ball (and stick and virtuals), add virtuals (not auto)
-# tools put/copy show count stick ball
-# hot keys for tools
-# id -> object_pointer
-# refactor file load remove virtual ball
+# TODO undo show count stick ball
+#  переделать ссылки по id -> object_pointer ?

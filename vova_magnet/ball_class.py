@@ -1,6 +1,8 @@
-from core.stream_io import StreamIO
-from base_classes import StreamData
 from math import *
+
+from base_classes import StreamData
+from core.stream_io import StreamIO
+
 
 class Ball(StreamData):
     def load_from_stream(self, stream):
@@ -82,5 +84,5 @@ class Ball(StreamData):
         """
         if not self.enable:
             return False
-        length = sqrt(pow(x-self.x, 2) + pow(y-self.y, 2))
+        length = sqrt(pow(x - self.x, 2) + pow(y - self.y, 2))
         return length < self.r
