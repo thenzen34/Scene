@@ -52,6 +52,7 @@ class Ball(StreamData):
         self.virtual = True
         self.x = x
         self.y = y
+        # TODO remove enable
         self.enable = True
 
     def disable(self):
@@ -61,7 +62,8 @@ class Ball(StreamData):
         if self.parents_id.count(parent_id) == 0:
             self.parents_id.append(parent_id)
         else:
-            print('ups')
+            # print('ups')
+            pass
 
     def __str__(self):
         return '{0}x{1}={2} ({3} | {4})'.format(self.x, self.y, self.virtual, self.r, self.length)
@@ -69,44 +71,8 @@ class Ball(StreamData):
     def get_xy(self):
         return self.x, self.y
 
-    def set_not_virtual(self, balls, scene):
-        """
-
-        :type scene: TurtleScene
-        :type balls: list[Ball]
-        :return []
-        """
+    def set_not_virtual(self):
         self.virtual = False
-        # add new virtual check not duplicate
-        all_balls_xy = [tuple(trunc(x) // self.r for x in x.get_xy()) for x in balls if x.enable]
-        scene.pushalfa()
-
-        all_posible_virtual = []
-        angles = [0, 60, 90, 120, 180, 240, 270, 300]
-        angles += [30, 150, 210, 330]
-        # add 12 ball
-        for angle in angles:
-            x, y = scene.move_angle(angle).get_move_xy(self.length)
-            result_search = (trunc(x + self.x)  // self.r, trunc(y + self.y) // self.r)
-            result = (x + self.x), (y + self.y)
-            if all_balls_xy.count(result_search) == 0:
-                # all_posible_virtual.append(result)
-                ix = len(balls)
-                all_posible_virtual.append(ix)
-                ball = Ball(*result, self.length, self.r, ix)
-                ball.add_parent(self.s_id)
-                self.add_parent(len(balls))
-                balls.append(ball)
-            else:
-                print('add parents')
-                ix = all_balls_xy.index(result_search)
-                ball = balls[ix]
-                ball.add_parent(self.s_id)
-                self.parents_id.append(ix)
-
-        scene.popalfa()
-        # print('add {0} balls'.format(len(all_posible_virtual)))
-        return all_posible_virtual
 
     def check_click(self, x, y):
         """

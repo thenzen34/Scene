@@ -1,4 +1,3 @@
-
 from core.magnet_scene_GL import *
 from tkinter import filedialog as fd
 import tkinter as tk
@@ -7,9 +6,9 @@ import tkinter as tk
 
 from base_classes import ToolsBaseABC
 from magnet_data_class import MagnetsData
-from tools_class import NoneTool, StickTool, BallTool, RemoveVirtualBallTool
+from tools_class import NoneTool, StickTool, BallTool, DelBallTool
 
-
+# типа представление данных
 class Magnets5Scene(MagnetsData, MagnetsBaseScene):
     cur_tool_id = -1
 
@@ -103,25 +102,55 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
         self.new_ball(0, 0, self.length, self.r)
         self.tools_submenu = glutCreateMenu(self.process_menu_events)
 
-        self.add_tool(NoneTool(self))
-        self.add_tool(BallTool(self))
-        self.add_tool(StickTool(self))
-        self.add_tool(RemoveVirtualBallTool(self))
+        self.add_tool(NoneTool(self, self))
+        self.add_tool(BallTool(self, self))
+        self.add_tool(StickTool(self, self))
+        self.add_tool(DelBallTool(self, self))
         self.create_menu()
 
-    def on_mouse_click(self, x, y):
-        #x, y = self.last_click
+    def get_real_xy(self, x, y):
         n_x, n_y = self.get_scene_xy(self.ddx, self.ddy)
         n_x -= self.width / 2
         n_y -= self.height / 2
 
-        cur_x, cur_y = (x - self.width / 2) / self.nSca - n_x, (y - self.height / 2 ) / self.nSca- n_y
+        cur_x, cur_y = (x - self.width / 2) / self.nSca - n_x, (y - self.height / 2) / self.nSca - n_y
+        return cur_x, cur_y
+
+    def on_mouse_click(self, x, y):
+        cur_x, cur_y = self.get_real_xy(x, y)
         if 0 <= self.cur_tool_id < len(self.tools):
             tool = self.tools[self.cur_tool_id]
-            if tool.click(cur_x, cur_y, self):
+            if tool.click(cur_x, cur_y):
                 self.gen_draw()
 
+        print(len(self.balls), len(self.sticks), sum([len(x.parents_id) for x in self.balls]))
         super().on_mouse_click(x, y)
+
+    cur_x = 0.
+    cur_y = 0.
+
+    def gl_mouse_motion(self, x, y):
+        self.cur_x = x
+        self.cur_y = y
+
+        return super().gl_mouse_motion(x, y)
+
+    def gl_mouse_motion_passive(self, x, y):
+        self.cur_x = x
+        self.cur_y = y
+
+        return super().gl_mouse_motion_passive(x, y)
+
+    def redraw(self):
+        super().redraw()
+
+        cur_x, cur_y = self.get_real_xy(self.cur_x, self.cur_y)
+
+        if 0 <= self.cur_tool_id < len(self.tools):
+            tool = self.tools[self.cur_tool_id]
+            tool.draw(cur_x, cur_y)
+
+        return self
 
     def draw_obj(self):
         # type: () -> Magnets5Scene
@@ -156,3 +185,5 @@ t.draw()
 # TODO undo, remove ball (and stick and virtuals), add virtuals (not auto)
 # tools put/copy show count stick ball
 # hot keys for tools
+# id -> object_pointer
+# refactor file load remove virtual ball

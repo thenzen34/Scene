@@ -13,10 +13,19 @@ class StreamData(ABC):
 
 class ToolsBaseABC(ABC):
     @abstractmethod
-    def click(self, cur_x, cur_y, scene):
+    def draw(self, cur_x, cur_y):
         """
 
-        :param scene: TurtleScene
+        :param cur_x: float
+        :param cur_y: float
+        :return bool
+        """
+        pass
+
+    @abstractmethod
+    def click(self, cur_x, cur_y):
+        """
+
         :param cur_x: float
         :param cur_y: float
         :return bool
