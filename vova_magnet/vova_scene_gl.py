@@ -3,32 +3,11 @@ from tkinter import filedialog as fd
 
 from core.magnet_scene_GL import *
 from magnet_data_class import MagnetsData
-from tools_class import ToolsBase, NoneTool, StickTool, BallTool, DelBallTool, Ball3Tool, Ball4Tool, Ball6Tool
-
-global GLUT_STROKE_ROMAN
+from tools_class import ToolsBase, NoneTool, StickTool, BallTool, DelBallTool, Ball3Tool, Ball4Tool, Ball6Tool, DigitalTestTool, LineTool
 
 
 # типа представление данных
 class Magnets5Scene(MagnetsData, MagnetsBaseScene):
-    def output(self, x, y, *args):
-        glPushMatrix()
-        c = 1 / 10000
-        w = 6
-        glScalef(c * w, c * w, c * w)
-        width = 0
-        height = glutStrokeHeight(GLUT_STROKE_ROMAN)
-
-        params = list(args)
-        fmt = params.pop(0)
-        string = fmt % tuple(params)
-        for p in string:
-            width += glutStrokeWidth(GLUT_STROKE_ROMAN, ord(p))
-
-        glTranslatef(x - width / 2, y - height / 4, 0)
-        for p in string:
-            glutStrokeCharacter(GLUT_STROKE_ROMAN, ord(p))
-
-        glPopMatrix()
 
     def prepare_tool(self, id):
         if self.cur_tool_id >= 0:
@@ -42,9 +21,16 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
     # debug = True
     def gl_key_pressed(self, *args):
         super().gl_key_pressed(*args)
+
         cmds = [bytes(str(x), 'UTF') for x in range(10)]
         cmd = args[0]
-        if cmds.count(cmd) > 0:
+        if cmd == b"s":
+            self.save_to_file()
+        elif cmd == b"l":
+            self.load_from_file()
+        elif cmd == b"r":
+            self.reset_scene()
+        elif cmds.count(cmd) > 0:
             ix = cmds.index(cmd)
             if ix < len(self.tools):
                 self.prepare_tool(ix)
@@ -103,13 +89,16 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
         elif menu_id == self.FILE_LOAD_MENU_ID:
             self.load_from_file()
         elif menu_id == self.RESET_MENU_ID:
-            self.reset_system()
-            self.new_ball(0, 0, self.length, self.r)
-            self.gen_draw()
+            self.reset_scene()
         elif menu_id >= self.TOOLS_MENU_START_ID:
             self.prepare_tool(menu_id - self.TOOLS_MENU_START_ID)
 
         return 0
+
+    def reset_scene(self):
+        self.reset_system()
+        self.new_ball(0, 0, self.length, self.r)
+        self.gen_draw()
 
     def create_menu(self):
         file_submenu = glutCreateMenu(self.process_menu_events)
@@ -136,7 +125,8 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
 
         :type tool: ToolsBaseABC
         """
-        glutAddMenuEntry('{0} - {1}'.format(len(self.tools), tool.get_name()), self.TOOLS_MENU_START_ID + len(self.tools))
+        glutAddMenuEntry('{0} - {1}'.format(len(self.tools), tool.get_name()),
+                         self.TOOLS_MENU_START_ID + len(self.tools))
         self.tools.append(tool)
 
     def init(self):
@@ -152,6 +142,9 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
         # self.add_tool(Ball5Tool(self, self))
         self.add_tool(DelBallTool(self, self))
         self.add_tool(Ball6Tool(self, self))
+
+        self.add_tool(DigitalTestTool(self, self))
+        self.add_tool(LineTool(self, self))
         self.create_menu()
 
     def get_real_xy(self, x, y):
@@ -207,7 +200,6 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
             if tool.click(cur_x, cur_y):
                 self.gen_draw()
 
-        print(len(self.balls), len(self.sticks), sum([len(x.parents_id) for x in self.balls]))
         super().on_mouse_click(x, y)
 
     cur_x = 0.
@@ -227,8 +219,6 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
 
     def redraw(self):
         super().redraw()
-
-        self.output(0, 0, 'text')
 
         cur_x, cur_y = self.get_real_xy(self.cur_x, self.cur_y)
 
@@ -254,7 +244,11 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
                     self.c_set_color(100, 0, g)
                 else:
                     self.c_set_color(255, 0, g)
-                self.i_move_to(*ball.get_xy()).put_ball()
+                self.i_move_to(*ball.get_xy()).put_ball()# .i_draw_text(str(ball.s_id))
+
+                self.i_push_step().c_push_color().d_push_digital_size()
+                self.c_set_color(100, 200, 100).d_set_digital_size(1).d_draw_tex(str(ball.s_id), True)
+                self.i_pop_step().c_pop_color().d_pop_digital_size()
             i += 1
 
         for stick in self.sticks:
@@ -262,12 +256,25 @@ class Magnets5Scene(MagnetsData, MagnetsBaseScene):
             ball_end = self.balls[stick.end_ball_id]
             self.c_set_color(0, 100, 200).i_move_to(*ball_start.get_xy()).i_line_to(*ball_end.get_xy())
 
+        self.i_push_step().c_push_color().d_push_digital_size()
+        self.c_set_color(200, 100, 200).i_move_to(0, 480).d_draw_tex('b:{0} s:{1} p:{2} r:{3}'.format(
+            len(self.balls),
+            len(self.sticks),
+            sum([len(x.parents_id) for x in self.balls]),
+            len(self.all_balls_r),
+        ), True)
+
+        # self.c_set_color(200, 100, 200).i_move_to(0, -480).d_draw_tex('0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ', True)
+        self.i_pop_step().c_pop_color().d_pop_digital_size()
+
+
         return self
 
 
 t = Magnets5Scene(640, 480)
 t.draw()
 
-# TODO undo show count stick ball
+# TODO undo
 #  переделать ссылки по id -> object_pointer ?
 #  рефакторинг сцены разбить на независимые участки - текст, геометрия, цвет, ..
+#  move object tool, info

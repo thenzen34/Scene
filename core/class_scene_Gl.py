@@ -8,6 +8,8 @@ from OpenGL.GLUT import *
 
 from core.base_scene import BaseScene
 
+global GLUT_STROKE_ROMAN
+
 
 class Scene(BaseScene):
     def i_center(self):
@@ -252,7 +254,8 @@ class Scene(BaseScene):
         cx = self.width / 2  # центр по х
         cy = self.height / 2  # центр по у
         self \
-            .c_set_color(0, 255, 0).i_move_to(0, -cy).i_line_step(0, self.height).i_move_to(-cx, 0).i_line_step(self.width, 0)
+            .c_set_color(0, 255, 0).i_move_to(0, -cy).i_line_step(0, self.height).i_move_to(-cx, 0).i_line_step(
+            self.width, 0)
         return self
 
     def get_pixel(self, x, y):
@@ -331,6 +334,38 @@ class Scene(BaseScene):
 
 
 class SceneThird(Scene):
+    def i_draw_text(self, *args):
+        return self.draw_text(self._x, -self._y, *args)
+
+    # todo move up
+    def draw_text(self, x, y, *args):
+        w = 6
+
+        koef = 7  # self.width / w / 1000
+        c_x, c_y = x * koef, y * koef
+        glPushMatrix()
+        c = 1 / 10000
+        glScalef(c * w, c * w, c * w)
+        width = 0
+        height = glutStrokeHeight(GLUT_STROKE_ROMAN)
+
+        params = list(args)
+        fmt = params.pop(0)
+        string = fmt % tuple(params)
+        for p in string:
+            width += glutStrokeWidth(GLUT_STROKE_ROMAN, ord(p))
+
+        center = False
+        if center:
+            c_x -= width / 2
+            c_y -= height / 4
+
+        glTranslatef(c_x, c_y, 0)
+        for p in string:
+            glutStrokeCharacter(GLUT_STROKE_ROMAN, ord(p))
+
+        glPopMatrix()
+
     xRot = 0.0
     yRot = 0.0
     zRot = 0.0
@@ -511,6 +546,7 @@ class Scene2d(SceneThird):
         return self
 
     right_click = 0, 0
+
     def on_mouse_right_down(self, x, y):
         super().on_mouse_right_down(x, y)
         self.right_click = x, y

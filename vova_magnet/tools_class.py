@@ -302,3 +302,68 @@ class Ball5Tool(Ball3Tool):
 
 class Ball6Tool(Ball3Tool):
     cnt = 6
+
+class LineTool(ToolsBase):
+    def get_name(self):
+        return 'Line'
+
+    def click(self, cur_x, cur_y):
+        all_stick_ball_ids = [sorted([x.start_ball_id, x.end_ball_id]) for x in self.data.sticks]
+        # check_click in not virtual
+        i = 0
+        while i < len(self.data.balls):
+            ix = i
+            if self.data.balls[ix].check_click(cur_x, cur_y):
+                if self.data.last_ball < 0:
+                    self.data.last_ball = ix
+                else:
+                    if self.data.last_ball != ix:
+                        result = sorted([self.data.last_ball, ix])
+                        if all_stick_ball_ids.count(result) == 0:
+                            self.data.new_stick(ix)
+                        else:
+                            ix_stick = all_stick_ball_ids.index(result)
+                            self.data.remove_stick(ix_stick)
+                    self.data.last_ball = -1
+                return True
+            i += 1
+        return False
+
+class DigitalTestTool(ToolsBase):
+    ix = 0
+
+    def get_name(self):
+        return 'DigitalTest'
+
+    def on_mouse_wheel_up(self, cur_x, cur_y):
+        """
+
+        :param cur_x: float
+        :param cur_y: float
+        :return bool
+        """
+        if self.ix > -1:
+            self.ix -= 1
+        return True
+
+    def on_mouse_wheel_down(self, cur_x, cur_y):
+        """
+
+        :param cur_x: float
+        :param cur_y: float
+        :return bool
+        """
+        if self.ix < 50:
+            self.ix += 1
+        return True
+
+    def draw(self, cur_x, cur_y):
+        # type: (float, float) -> ()
+        """
+
+        :param cur_y: float
+        :param cur_x: float
+        """
+        return self.scene.i_push_step().d_push_digital_size() \
+            .d_set_digital_size(10).i_move_to(cur_x, cur_y)._draw_digital([self.ix]).d_draw_tex(str(self.ix)) \
+            .i_pop_step().d_pop_digital_size()

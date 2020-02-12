@@ -1,3 +1,4 @@
+import math
 from math import *
 
 from base_classes import StreamData
@@ -72,6 +73,9 @@ class Ball(StreamData):
 
     def get_xy(self):
         return self.x, self.y
+
+    def get_r(self):
+        return math.sqrt(math.pow(self.x, 2) + math.pow(self.y, 2))
 
     def set_not_virtual(self):
         self.virtual = False

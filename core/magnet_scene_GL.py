@@ -1,6 +1,7 @@
 # coding=utf-8
 from math import *
 from random import randint
+
 from core.class_scene_Gl import *
 
 
@@ -165,6 +166,7 @@ class MagnetsBaseScene(TurtleScene, Scene2d):
     # GLUT_CURSOR_FULL_CROSSHAIR прицел GLUT_CURSOR_CROSSHAIR
 
     last_click = 0, 0
+
     def on_mouse_click(self, x, y):
         lx, ly = self.last_click
         dx = 5
