@@ -177,7 +177,8 @@ class MagnetsData:
 
         :param ix: int
         """
-        self.sticks.append(Stick(self.last_ball, ix))
+        # todo save sorted, test
+        self.sticks.append(Stick(*sorted([self.last_ball, ix])))
         # print('add stick')
 
     def rename_ball(self, ball_id, new_ix):
