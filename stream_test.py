@@ -1,6 +1,6 @@
 from random import random
 
-from core.stream_io import StreamIO
+from Scene.stream_io import StreamIO
 
 in_file = 'test.double'
 

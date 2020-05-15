@@ -2,7 +2,7 @@
 from math import *
 from random import randint
 
-from core.class_scene_Gl import *
+from Scene.class_scene_Gl import *
 
 
 class TurtleScene:

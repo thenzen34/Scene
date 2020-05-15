@@ -1,4 +1,4 @@
-from core.magnet_scene_GL import MagnetsBaseScene
+from Scene.magnet_scene_GL import MagnetsBaseScene
 from magnet_data_class import MagnetsData
 
 

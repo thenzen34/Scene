@@ -1,12 +1,12 @@
 # coding=utf-8
 # import math
 
-# from core.class_scene import Scene
+# from Scene.class_scene import Scene
 
-# from core.class_scene_pygame import Scene
+# from Scene.class_scene_pygame import Scene
 
 
-from core.class_scene_svg import Scene
+from Scene.class_scene_svg import Scene
 
 
 # todo ellipce to array point save as params and point intersect

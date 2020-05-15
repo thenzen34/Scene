@@ -2,7 +2,7 @@
 
 from math import *
 
-from core.class_scene_Gl import *
+from Scene.class_scene_Gl import *
 
 
 class PiTree1Scene(Scene2d):

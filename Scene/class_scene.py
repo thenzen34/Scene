@@ -2,7 +2,7 @@
 import time
 
 import graphics as gr
-from core.base_scene import BaseScene
+from Scene.base_scene import BaseScene
 from graphics import color_rgb
 
 

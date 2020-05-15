@@ -6,7 +6,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-from core.base_scene import BaseScene
+from Scene.base_scene import BaseScene
 
 global GLUT_STROKE_ROMAN
 

@@ -1,5 +1,5 @@
 # coding=utf-8
-from core.class_scene3d import Scene3d
+from Scene.class_scene3d import Scene3d
 
 
 class Cube(Scene3d):

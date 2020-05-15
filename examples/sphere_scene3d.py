@@ -2,7 +2,7 @@
 import random
 from math import *
 
-from core.class_scene3d import Scene3d
+from Scene.class_scene3d import Scene3d
 
 
 class Sphere(Scene3d):

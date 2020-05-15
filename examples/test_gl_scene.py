@@ -1,6 +1,6 @@
 import math as mt
 
-from core.class_scene_Gl import *
+from Scene.class_scene_Gl import *
 
 
 class TestGlScene(Scene):

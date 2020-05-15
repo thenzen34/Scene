@@ -4,7 +4,7 @@ import math
 
 import pygame
 
-from core.base_scene import BaseScene
+from Scene.base_scene import BaseScene
 
 # Initialize the game engine
 pygame.init()

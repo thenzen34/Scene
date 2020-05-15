@@ -3,7 +3,7 @@ import math
 import pygame
 
 # from class_test import Scene
-from core.class_scene_pygame import Scene
+from Scene.class_scene_pygame import Scene
 
 calc_int = False
 
