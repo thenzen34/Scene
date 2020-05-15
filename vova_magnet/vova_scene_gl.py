@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog as fd
 
-from core.magnet_scene_GL import *
+from Scene.magnet_scene_GL import *
 from magnet_data_class import MagnetsData
 from tools_class import ToolsBase, NoneTool, StickTool, BallTool, DelBallTool, Ball3Tool, Ball4Tool, Ball6Tool, DigitalTestTool, LineTool
 

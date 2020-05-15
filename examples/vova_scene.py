@@ -1,7 +1,7 @@
 # coding=utf-8
 from math import *
 
-from core.class_scene import Scene
+from Scene.class_scene import Scene
 
 
 class TurtleScene(Scene):

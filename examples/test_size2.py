@@ -1,4 +1,4 @@
-from core.class_scene_svg import *
+from Scene.class_scene_svg import *
 
 
 class TestSize(Scene):

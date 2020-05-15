@@ -2,7 +2,7 @@
 # import math
 
 # from class_scene import Scene
-from core.class_scene_pygame import Scene
+from Scene.class_scene_pygame import Scene
 
 
 class NewScene(Scene):

@@ -6,7 +6,7 @@ import random
 import time
 from math import *
 
-from core.class_scene_pygame import Scene
+from Scene.class_scene_pygame import Scene
 
 
 class DerivativeFunctScene(Scene):

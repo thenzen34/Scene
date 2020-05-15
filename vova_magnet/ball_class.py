@@ -2,7 +2,7 @@ import math
 from math import *
 
 from base_classes import StreamData
-from core.stream_io import StreamIO
+from Scene.stream_io import StreamIO
 
 
 class Ball(StreamData):

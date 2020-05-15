@@ -2,7 +2,7 @@ import time
 
 import svgwrite
 
-from core.base_scene import BaseScene
+from Scene.base_scene import BaseScene
 
 cm_to_point = 28.3464566929  # in swf
 cm_to_pixel = 37.7952755906  # in web

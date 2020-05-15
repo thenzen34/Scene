@@ -1,7 +1,7 @@
 from math import *
 
 from ball_class import Ball
-from core.stream_io import StreamIO
+from Scene.stream_io import StreamIO
 from stick_class import Stick
 
 

@@ -1,11 +1,11 @@
 # coding=utf-8
 # import math
 
-# from core.class_scene_svg import Scene
+# from Scene.class_scene_svg import Scene
 from math import *
 
 # from class_scene import Scene
-from core.class_scene_pygame import Scene
+from Scene.class_scene_pygame import Scene
 
 
 class PiTree1Scene(Scene):

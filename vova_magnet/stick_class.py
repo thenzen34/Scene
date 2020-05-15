@@ -1,5 +1,5 @@
 from base_classes import StreamData
-from core.stream_io import StreamIO
+from Scene.stream_io import StreamIO
 
 
 class Stick(StreamData):
