@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 import Scene
 
 setup(
-    name='Scene',
+    name='Scene_tz',
 
     version=Scene.__version__,
     packages=find_packages(),
