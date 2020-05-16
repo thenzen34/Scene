@@ -7,3 +7,12 @@ Description
 так же потребуется python3-tk python3-opengl
 
 самый последний пример использования https://github.com/thenzen34/vova_magnet
+
+Установка
+```
+pip install Scene_tz
+```
+
+пример использования - Дерево пифагора на OpenGl 
+
+https://github.com/thenzen34/Scene/blob/master/examples/pifagor_tree_scene_gl.py
