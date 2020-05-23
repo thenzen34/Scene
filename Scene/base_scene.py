@@ -233,8 +233,8 @@ class GraphicsItems(BaseSceneClass, MathGeometry):
     def rectangle(self, x1, y1, x2, y2, color):
         return self.poly_lines(color, [[x1, y1], [x1, y2], [x2, y2], [x2, y1]])
 
-    def arc(self, _cx, _cy, _r1, _r2, _color, _a, _arc, u=0):
-        # type: (float, float, float, float, str, float, float, float) -> GraphicsItems
+    def get_acr_points(self, _cx, _cy, _r1, _r2, _color, _a, _arc, u=0):
+        # type: (float, float, float, float, str, float, float, float) -> []
         points = []
         alfastart = math.radians(_a)
         alfaend = math.radians(_arc)
@@ -247,7 +247,7 @@ class GraphicsItems(BaseSceneClass, MathGeometry):
 
             rrr = math.fabs(x) + math.fabs(y)
 
-            # self.setpixel(_cx + x, _cy + y, _color)
+            # self.set_pixel(_cx + x, _cy + y, self.get_color(0, 0, 255))
             # self.circle(_cx + x, _cy + y, 3, _color)
 
             da = math.pi / self.get_rad_step(math.trunc(rrr) + 1)
@@ -256,6 +256,12 @@ class GraphicsItems(BaseSceneClass, MathGeometry):
         x, y = self.get_acr_point(_r1, _r2, alfastart, u)
 
         points.append([_cx + x, _cy + y])
+
+        return points
+
+    def arc(self, _cx, _cy, _r1, _r2, _color, _a, _arc, u=0):
+        # type: (float, float, float, float, str, float, float, float) -> GraphicsItems
+        points = self.get_acr_points(_cx, _cy, _r1, _r2, _color, _a, _arc, u)
 
         self.poly_lines(_color, points)
         return self
@@ -360,8 +366,20 @@ class IncrementMove(ColorStack):
         return self \
             .circle(self._x, self._y, _r, self._color, polylines)
 
+    def i_get_arc_points(self, _r1, _r2, _a, _arc):
+        # type: (float, float, float, float) -> []
+        return self.get_acr_points(self._x, self._y, _r1, _r2, self._color, _a, _arc)
+
     def i_arc(self, _r1, _r2, _a, _arc):
-        # type: (int, int, int, int) -> IncrementMove
+        """
+
+        :param _r1:
+        :param _r2:
+        :param _a: start
+        :param _arc: len
+        :return:
+        """
+        # type: (float, float, float, float) -> IncrementMove
         return self \
             .arc(self._x, self._y, _r1, _r2, self._color, _a, _arc)
 
