@@ -26,3 +26,10 @@ https://github.com/thenzen34/Scene/blob/master/examples/spider_scene.py
 
 https://github.com/thenzen34/Scene/blob/master/examples/pifagor_tree_scene_gl.py
 ![Пифагор в png](/examples/pifagor_tree_scene_gl.png)
+
+## L system
+https://github.com/thenzen34/Scene/blob/master/examples/l_sys/p3_scene.py
+![l_sys_p3 в png](/examples/l_sys/p3_scene.png)
+
+https://github.com/thenzen34/Scene/blob/master/examples/l_sys/p4_scene.py
+![l_sys_p4 в png](/examples/l_sys/p4_scene.png)
