@@ -1,5 +1,4 @@
 from Scene.class_scene_Gl_2d_resize import BaseGl2dScaleScene
-from Scene.class_scene_Gl import *
 import math
 
 

@@ -5,7 +5,10 @@ from typing import Any
 class MathGeometry:
     @staticmethod
     def get_acr_point(_r1, _r2, _a, u=0):
-        # type: (float, float, float, float) -> [int, int]
+        # type: (float, float, float, float) -> [float, float]
+        """
+        вернет [x, y] точка на дуге элипса со сторонами r1 r2 на угле a повернутом на u градусов
+        """
         a0 = _a
 
         x = _r1 * math.cos(a0)
@@ -25,17 +28,23 @@ class MathGeometry:
 
     def get_rad_step(self, r):
         # type: (int) -> int
+        """
+        вернет количество шагов приращения при рисования кривых при котором достигается оптимальная скругленность
+        """
         if r <= 10:
             return r
-        if self.Data_value[r - 11] == 0:
+        if not self.r_data_value.get(r - 11, False):
             self.calc_rad_step(r)
 
-        return self.Data_value[r - 11]
+        return self.r_data_value[r - 11]
 
-    Data_value = [0] * 1000
+    r_data_value = {}
 
     def calc_rad_step(self, r):
-        # type: (int) -> None
+        # type: (int) -> self
+        """
+        вернет количество шагов приращения при рисования кривых при котором достигается оптимальная скругленность
+        """
         n = r
         while n <= r:
             i = 1
@@ -49,10 +58,11 @@ class MathGeometry:
                     )
                 )
                 if rrr <= 1:
-                    self.Data_value[r - 11] = i
-                    return
+                    self.r_data_value[r - 11] = i
+                    return self
                 i += 1
             n += 1
+        return self
 
     @staticmethod
     def calc_intersection_line_line(line1, line2):
@@ -233,8 +243,8 @@ class GraphicsItems(BaseSceneClass, MathGeometry):
     def rectangle(self, x1, y1, x2, y2, color):
         return self.poly_lines(color, [[x1, y1], [x1, y2], [x2, y2], [x2, y1]])
 
-    def get_acr_points(self, _cx, _cy, _r1, _r2, _color, _a, _arc, u=0):
-        # type: (float, float, float, float, str, float, float, float) -> []
+    def get_acr_points(self, _cx, _cy, _r1, _r2, _a, _arc, u=0):
+        # type: (float, float, float, float, float, float, float) -> []
         points = []
         alfastart = math.radians(_a)
         alfaend = math.radians(_arc)
@@ -261,7 +271,7 @@ class GraphicsItems(BaseSceneClass, MathGeometry):
 
     def arc(self, _cx, _cy, _r1, _r2, _color, _a, _arc, u=0):
         # type: (float, float, float, float, str, float, float, float) -> GraphicsItems
-        points = self.get_acr_points(_cx, _cy, _r1, _r2, _color, _a, _arc, u)
+        points = self.get_acr_points(_cx, _cy, _r1, _r2, _a, _arc, u)
 
         self.poly_lines(_color, points)
         return self
@@ -298,6 +308,20 @@ class ColorStack(GraphicsItems):
     # связанные с родителями
     def c_set_color(self, _r, _g, _b):
         # type: (int, int, int) -> ColorStack
+        """
+        устанавливаем текущий цвет
+
+        :param _r: красный
+        :type _r: int
+
+        :param _g: зеленый
+        :type _g: int
+
+        :param _b: синий
+        :type _b: int
+        :return: BaseSceneClass
+        :rtype: ColorStack
+        """
         self._color = self.get_color(_r, _g, _b)
         return self
 
@@ -320,12 +344,18 @@ class IncrementMove(ColorStack):
 
     def i_move_to(self, x, y):
         # type: (float, float) -> IncrementMove
+        """
+        помещает указатель в точку X, Y
+        """
         self._x = x
         self._y = y
         return self
 
     def i_step(self, dx, dy):
         # type: (float, float) -> IncrementMove
+        """
+        запоминаем позицию, и смещает указатель на dX, dY
+        """
         return self \
             .i_push_step() \
             .i_move_to(self._x + dx, self._y + dy)
@@ -333,11 +363,17 @@ class IncrementMove(ColorStack):
     # связанные с родителями
     def i_set_pixel(self):
         # type: () -> IncrementMove
+        """
+        закрасить текущую точку текущим цветом
+        """
         return self \
             .set_pixel(self._x, self._y, self._color)
 
     def i_line_to(self, x, y):
         # type: (float, float) -> IncrementMove
+        """
+        рисует линию из текущей точки в точку X, Y затем переводит туда указатель
+        """
         return self \
             .line(self._x, self._y, x, y, self._color) \
             .i_move_to(x, y)
@@ -345,15 +381,21 @@ class IncrementMove(ColorStack):
     # обратная система координат
     def i_line_to_inv(self, x, y):
         # type: (float, float) -> IncrementMove
+        """
+        рисует линию из текущей точки в точку X, Y затем переводит туда указатель (обратная система координат)
+        """
         return self \
             .line(self._x, self.height - self._y, x, self.height - y, self._color) \
             .i_move_to(x, y)
 
-    def i_line_step(self, x, y):
+    def i_line_step(self, dx, dy):
         # type: (float, float) -> IncrementMove
+        """
+        рисует линию из текущей точки в точку смещенную на dX, dY затем переводит туда указатель (обратная система координат)
+        """
         return self \
-            .line(self._x, self._y, self._x + x, self._y + y, self._color) \
-            .i_move_to(self._x + x, self._y + y)
+            .line(self._x, self._y, self._x + dx, self._y + dy, self._color) \
+            .i_move_to(self._x + dx, self._y + dy)
 
     def i_line_and_step(self, x, y):
         # type: (float, float) -> IncrementMove
@@ -361,30 +403,46 @@ class IncrementMove(ColorStack):
             .line(self._x, self._y, self._x + x, self._y + y, self._color) \
             .i_step(x, y)
 
-    def i_circle(self, _r, polylines=False):
+    def i_circle(self, _r, poly_lines=False):
         # type: (float, bool) -> IncrementMove
+        """
+        рисует окружность в текущей точки в точке радиусом r если указан флаг poly_lines значит рисуем линиями
+        """
         return self \
-            .circle(self._x, self._y, _r, self._color, polylines)
+            .circle(self._x, self._y, _r, self._color, poly_lines)
 
     def i_get_arc_points(self, _r1, _r2, _a, _arc):
         # type: (float, float, float, float) -> []
-        return self.get_acr_points(self._x, self._y, _r1, _r2, self._color, _a, _arc)
+        return self.get_acr_points(self._x, self._y, _r1, _r2, _a, _arc)
 
     def i_arc(self, _r1, _r2, _a, _arc):
         """
+        рисует дуру относительно текущих курсора радиусом r1 r2 сектора arc углом a
 
-        :param _r1:
-        :param _r2:
-        :param _a: start
-        :param _arc: len
-        :return:
+        :param _r1: радиус x элипса
+        :type _r1: float
+
+        :param _r2: радиус y элипса
+        :type _r2: float
+
+        :param _a: угол начала
+        :type _a: float
+
+        :param _arc: размер сектора от 0 до 360
+        :type _arc: float
+
+        :return: сцену
+        :rtype: IncrementMove
+
         """
-        # type: (float, float, float, float) -> IncrementMove
         return self \
             .arc(self._x, self._y, _r1, _r2, self._color, _a, _arc)
 
     def i_center(self):
         # type: () -> IncrementMove
+        """
+        помещает указатель в центр экрана
+        """
         return self \
             .i_move_to(self.width / 2, self.height / 2)
 
@@ -392,7 +450,8 @@ class IncrementMove(ColorStack):
         # type: () -> IncrementMove
         """
         рисуем линии координат
-        :return: IncrementMove
+        :return: сцену
+        :rtype: IncrementMove
         """
 
         cx = self.width / 2  # центр по х
@@ -632,6 +691,13 @@ class BaseScene(DigitalOutputScene):
     closed = True
 
     def set_closed(self, value):
+        """
+        устанавливает флаг закрытия полигона
+        :param value: закрывать полигоны?
+        :type value: bool
+        :return: сцену
+        :rtype: BaseScene
+        """
         # type: (bool) -> BaseScene
         self.closed = value
         return self

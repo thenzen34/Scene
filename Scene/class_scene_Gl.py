@@ -265,12 +265,12 @@ class Scene(BaseScene):
         # type: (float, float, float) -> [float, float, float, float]
         return r / 255, g / 255, b / 255, 1
 
-    def line(self, x1, y1, x2, y2, color):
+    def line(self, x1, y1, x2, y2, color, layer=0):
         # type: (float, float, float, float, str) -> Scene
         glBegin(GL_LINES)
         glColor3d(*color)
-        glVertex2f(x1, y1)
-        glVertex2f(x2, y2)
+        glVertex3f(x1, y1, layer)
+        glVertex3f(x2, y2, layer)
         glEnd()
 
         return self
@@ -281,18 +281,22 @@ class Scene(BaseScene):
         # type: (float, float, float, float, [float, float, float]) -> Scene
         return self.line(x1, self.height - y1, x2, self.height - y2, color)
 
-    def poly_lines(self, color, points):
+    def poly_lines(self, color, points, layer=0):
         # type: (str, [float, float]) -> Scene
-        first = points.pop(0)
+        first = points[0]
 
         last = first
 
-        for next_point in points:
-            self.line(last[0], last[1], next_point[0], next_point[1], color)
+        i = 1
+        # for next_point in points:
+        while i < len(points):
+            next_point = points[i]
+            i += 1
+            self.line(last[0], last[1], next_point[0], next_point[1], color, layer)
             last = next_point
 
         if self.closed:
-            self.line(last[0], last[1], first[0], first[1], color)
+            self.line(last[0], last[1], first[0], first[1], color, layer)
 
         return self
 
@@ -322,7 +326,7 @@ class Scene(BaseScene):
 
         return self
 
-    def setpixels(self, points, _color):
+    def set_pixels(self, points, _color):
         # type: ([], str) -> Scene
         glBegin(GL_POINTS)
         glColor3d(*_color)
@@ -390,17 +394,25 @@ class SceneThird(Scene):
             .i_move_to(0, -cy).i_line_step(0, self.height).i_move_to(-cx, 0).i_line_step(self.width, 0)
         return self
 
-    def line(self, x1, y1, x2, y2, color):
+    def line(self, x1, y1, x2, y2, color, layer=0):
         # type: (float, float, float, float, str) -> Scene
         glBegin(GL_LINES)
         glColor3d(*color)
         c_x, c_y = self.get_xy_scene(x1 + self.width / 2, y1 + self.height / 2)
-        glVertex2f(c_x, c_y)
+        glVertex3f(c_x, c_y, layer)
         c_x, c_y = self.get_xy_scene(x2 + self.width / 2, y2 + self.height / 2)
-        glVertex2f(c_x, c_y)
+        glVertex3f(c_x, c_y, layer)
         glEnd()
 
         return self
+
+    def fill_points(self, color, points, layer=0):
+        glBegin(GL_POLYGON)
+        glColor3f(*color)
+        for x, y in points:
+            c_x, c_y = self.get_xy_scene(x + self.width / 2, y + self.height / 2)
+            glVertex3f(c_x, c_y, layer)
+        glEnd()
 
     def set_pixel(self, _x, _y, _color):
         # type: (float, float, str) -> Scene
@@ -412,7 +424,7 @@ class SceneThird(Scene):
 
         return self
 
-    def setpixels(self, points, _color):
+    def set_pixels(self, points, _color):
         # type: ([], str) -> Scene
         glBegin(GL_POINTS)
         glColor3d(*_color)

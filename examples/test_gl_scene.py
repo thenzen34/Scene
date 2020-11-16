@@ -50,7 +50,7 @@ class TestGlScene(Scene):
         points = [(r * mt.cos(a), r * mt.sin(a)) for a in [2 * mt.pi * i / cnt for i in range(cnt)]]
 
         glPointSize(7.0)
-        self.setpixels(points, self.get_color(1.0, 0.0, 0.0))
+        self.set_pixels(points, self.get_color(1.0, 0.0, 0.0))
         '''
         for pt in points:
             self.setpixel(pt[0], pt[1], self.getcolor(1.0, 0.0, 0.0))
