@@ -72,7 +72,13 @@ class Scene(BaseScene):
         glutTimerFunc(self.fps_timer, self.reset_fps, 0)  # 0 - command
 
     def gl_mouse_wheel(self, *args):
-        print(args)
+        # print(args)
+        button, dir, x, y = args
+        if dir > 0:
+            self.on_mouse_wheel_up(x, y)
+        elif dir < 0:
+            self.on_mouse_wheel_down(x, y)
+        # https://stackoverflow.com/questions/14378/using-the-mouse-scrollwheel-in-glut
         pass
 
     def gl_mouse_handle(self, *args):
