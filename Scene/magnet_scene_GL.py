@@ -59,7 +59,7 @@ class MagnetsBaseScene(TurtleScene, Scene2d):
             self.is_projection_ortho = not self.is_projection_ortho
         if args[0] == b"\x1b":
             glutLeaveMainLoop()
-            exit()
+            # exit()
         if args[0] == b"x":
             if not self.wireframe:
                 glPolygonMode(GL_FRONT, GL_LINE)

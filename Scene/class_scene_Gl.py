@@ -590,7 +590,7 @@ class Scene2d(SceneThird):
         super().gl_key_pressed(*args)
         if args[0] == b"\x1b":
             glutLeaveMainLoop()
-            exit()
+            # exit()
 
 
 class SceneSecond(Scene):
