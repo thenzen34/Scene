@@ -447,7 +447,7 @@ class SceneThird(Scene):
         c_y = 1 - ((y + 1) / self.height) * 2 - self.zTra * self.nSca
         return c_x, c_y
 
-    # получаем координаты растровой сцены по гльным координатам
+    # получаем координаты растровой сцены по глобальным координатам
     def get_scene_xy(self, c_x, c_y):
         x = (self.height * (self.xTra * self.nSca + c_x) / self.width + 1) / 2 * self.width - 1
         y = - (self.height * ((self.zTra * self.nSca + c_y - 1) / 2) + 1)
